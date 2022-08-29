@@ -1,6 +1,6 @@
 # CollaSci 
 
-##Purpose
+## Purpose
 
 CollaSci is a python package aimed to develop scientific collaboration via database management and easy visualization.
 At first, the database is based on condensed matter data related to magnetism and developing user interface to easily add and share data. 
