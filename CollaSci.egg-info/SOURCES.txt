@@ -1,0 +1,10 @@
+LICENSE.txt
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+CollaSci/__init__.py
+CollaSci.egg-info/PKG-INFO
+CollaSci.egg-info/SOURCES.txt
+CollaSci.egg-info/dependency_links.txt
+CollaSci.egg-info/top_level.txt
