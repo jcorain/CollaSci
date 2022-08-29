@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: CollaSci
-Version: 0.0.1
-Summary: A package aimed to share scientific data
-Author: Jean-Christophe Orain
-Author-email: jean.christophe.orain@gmail.com
-Requires-Python: >=3.9
-License-File: LICENSE.txt
