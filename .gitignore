@@ -2,3 +2,5 @@
 *_env/
 build/
 buid\
+*/__pycache__
+*__pycache__
