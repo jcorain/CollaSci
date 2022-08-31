@@ -32,9 +32,9 @@ def check_table_exists(table_name, path = os.path.dirname(os.getcwd()), dbname =
        
     cur = connection.cursor()
     
-    check_table = cur.execute("SELECT COUNT(name) FROM sqlite_master WHERE type = 'table';")
+    check_table = cur.execute("SELECT name FROM sqlite_master WHERE type = 'table';")
     res = check_table.fetchall()
-    
+        
     check_table.close()
     connection.close()
     
@@ -83,6 +83,7 @@ def update_university_table(name, country, city, address, path = os.path.dirname
     # create connection 
     
     # connect to the database
+    
     connection = database_connect.create_or_connect_db(path = path, name = dbname)
     
     # check if the university table exists 
@@ -93,6 +94,17 @@ def update_university_table(name, country, city, address, path = os.path.dirname
         tables_create.create_university_table(path, dbname)
         print('The university table has been created.')
     
+    # if the table exists check that the values you want to add are new 
+    
+    else:
+        # get the existing values 
+        
+        existing_values = tables_create.execute_fetchall(connection, 'SELECT * FROM university')
+        for val in existing_values:
+            if val[1] == name:
+                print('The university {} already exists and will not be added to the database.'.format(name))
+                connection.close()
+                return None
     # create the cursor 
         
     query = """
@@ -103,6 +115,8 @@ def update_university_table(name, country, city, address, path = os.path.dirname
     """
     
     tables_create.execute_query(connection, query, task = (name, country, city, address))
+    
+    print('The university {} has been succesfully added to the database.'.format(name))
     
     connection.close()
     

@@ -23,6 +23,31 @@ def execute_query(connection, query, task = None):
     #close the cursor
     cursor.close()
 
+def execute_fetchall(connection, query):
+    '''
+    Parameters
+    ----------
+    connection. query : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    None.
+
+    '''
+    cursor = connection.cursor()
+    try:
+        res = cursor.execute(query).fetchall()
+        print("Query fetched successfully")
+    except sqlite3.Error as e:
+        print(f"The error '{e}' occurred")
+        res = None
+
+    #close the cursor
+    cursor.close()
+    return res
+
+
 
 def create_university_table(path = os.path.dirname(os.getcwd()), dbname = 'database.sqlite'):
     """
