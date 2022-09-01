@@ -64,7 +64,7 @@ def create_laboratory_table(connection):
     CREATE TABLE IF NOT EXISTS laboratory(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        university_id INT,
+        university_id INT NOT NULL,
         FOREIGN KEY(university_id) REFERENCES university(id) ON UPDATE CASCADE ON DELETE CASCADE
         );
     """
@@ -163,8 +163,8 @@ def create_compound_table(connection):
      CREATE TABLE IF NOT EXISTS compound(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
          name TEXT NOT NULL,
-         formula VARCHAR(100),
-         material_type_id INT,
+         formula VARCHAR(100) NOT NULL,
+         material_type_id INT NOT NULL,
          FOREIGN KEY(material_type_id) REFERENCES material_type(id) ON UPDATE CASCADE ON DELETE CASCADE
          );
      """
@@ -204,3 +204,40 @@ def create_experiment_type_table(connection):
     # define the cursor and execute querry 
     
     database_utils.execute_query(connection, query)
+    
+def create_user_table(connection):
+     """
+     Function to create the user table
+     
+     Parameters
+     ----------
+     connection : SQL connection.
+         Connection to the SQL database.
+
+     Returns
+     -------
+     None.
+
+     """
+     
+     # check connection 
+     
+     if connection is None:
+         print('There is no connection to an SQL database. Please initiate it')
+         return None
+     
+     query = """
+     CREATE TABLE IF NOT EXISTS user(
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         firstname VARCHAR(100) NOT NULL,
+         lastname VARCHAR(100) NOT NULL,
+         status_id INT NOT NULL,
+         laboratory_id INT NOT NULL,
+         FOREIGN KEY(status_id) REFERENCES status(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY(laboratory_id) REFERENCES laboratory(id) ON UPDATE CASCADE ON DELETE CASCADE
+         );
+     """
+     
+     # define the cursor and execute querry 
+     
+     database_utils.execute_query(connection, query)  

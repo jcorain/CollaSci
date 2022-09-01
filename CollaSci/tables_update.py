@@ -397,7 +397,100 @@ def update_experiment_type_table(name, connection):
     
     if res_exec:
         print('The experiment_type {} has been succesfully added to the database.'.format(name))
+ 
+def update_user_table(firstname, lastname, status_id, laboratory_id, connection):
+    '''
+    function to update compound table data
+
+    Parameters
+    ----------
+    name : str
+        Name of the compound.
+    formula : str
+        Chemical formula of the compound.
+    material_type_id : int
+        ID of the material_type related to the laboratory
+
+    Returns
+    -------
+    None.
+
+    '''
+    # check that the values are not null 
+    if firstname is None:
+        print('There is no user firstname. Please provide it')
+        return None
+    
+    if lastname is None:
+        print('There is no user lastname. Please provide it')
+        return None
+    
+    
+    if status_id is None:
+        print('There is no status_id. Please provide it')
+        return None
+
+    if laboratory_id is None:
+        print('There is no laboratory_id. Please provide it')
+        return None
+
+    
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
+    
+    # set teh foreign keys on 
+    
+    connection.execute("PRAGMA foreign_keys = ON;")
+    
+    # check if the laboratory table exists 
+    
+    res = database_utils.check_table_exists(connection, 'user')
+    
+    if res == False:
+        tables_create.create_user_table(connection)
+        print('The user table has been created.')
+    
+    # if the table exists check that the values you want to add are new 
+    
+    else:
+        # get the existing values 
         
+        existing_firstname = database_utils.fetchall_query(connection, 'SELECT firstname FROM user')
+        for val in existing_firstname:
+            if val[0] == firstname:
+                
+                # check then the last name 
+                existing_lastname = database_utils.fetchall_query(connection, "SELECT lastname FROM user WHERE firstname = '{}'".format(firstname))
+                for val in existing_lastname:
+                    if val[0] == lastname:
+
+                        # check then the laboratory 
+                        existing_laboratory_id = database_utils.fetchall_query(connection, "SELECT laboratory_id FROM user WHERE firstname = '{}' AND lastname = '{}'".format(firstname, lastname))
+                        for val in existing_laboratory_id:
+                            if val[0] == laboratory_id:
+                                # get the laboratory_id name 
+                                laboratory_name = database_utils.fetchall_query(connection, 'SELECT name FROM laboratory WHERE id = {}'.format(laboratory_id))[0][0]
+                                print('The user {} {} ({}) already exists and will not be added to the database.'.format(firstname, lastname, laboratory_name))
+                                return None
+
+    # create the cursor 
+        
+    query = """
+    INSERT INTO 
+        user(firstname, lastname, status_id, laboratory_id)
+    VALUES
+        (?, ?, ?, ?)
+    """
+    
+    res_exec = database_utils.execute_query(connection, query, values = (firstname, lastname, status_id, laboratory_id))
+    
+    if res_exec:
+        laboratory_name = database_utils.fetchall_query(connection, 'SELECT name FROM laboratory WHERE id = {}'.format(laboratory_id))[0][0]
+        print('The user {} {} ({}) has been succesfully added to the database.'.format(firstname, lastname, laboratory_name))
+
         
 if __name__ == '__main__':
     
@@ -559,6 +652,53 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM experiment_type;").fetchall())
     cur.close()
     
+    print('\ncreate the first user\n')
+    
+    user_firstname = 'Jean-Christophe'
+    user_lastname = 'Orain'
+    status_id = 1
+    laboratory_id = 1
+    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    
+    print('\ncreate the second user\n')
+    
+    user_firstname = 'Jean-Christophe'
+    user_lastname = 'Orain'
+    status_id = 2
+    laboratory_id = 3
+    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    
+    print('\ncreate the third user\n')
+    
+    user_firstname = 'Gediminas'
+    user_lastname = 'Simutis'
+    status_id = 2
+    laboratory_id = 3
+    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    
+    print('\ncheck what happens if we recreate the entry\n')
+    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    
+    print('\nTest user without status id.\n')
+    user_firstname = 'Jean-Christophe'
+    user_lastname = 'Orain'
+    status_id = 3
+    laboratory_id = 2
+    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    
+    print('\nTest user without laboratory id.\n')
+    user_firstname = 'Jean-Christophe'
+    user_lastname = 'Orain'
+    status_id = 2
+    laboratory_id = 4
+    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    
+    print('\ncheck user table values\n')
+    
+    cur = connection.cursor()
+    print(cur.execute("SELECT * FROM user;").fetchall())
+    cur.close()
+    
     print('\ncheck all the tables values\n')
     cur = connection.cursor()
     print(cur.execute("SELECT * FROM university;").fetchall())
@@ -567,6 +707,8 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM material_type;").fetchall())
     print(cur.execute("SELECT * FROM compound;").fetchall())
     print(cur.execute("SELECT * FROM experiment_type;").fetchall())
+    print(cur.execute("SELECT * FROM user;").fetchall())
+
     cur.close()
     
     # close the connection
