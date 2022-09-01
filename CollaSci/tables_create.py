@@ -1,70 +1,26 @@
 '''
 module where the different tables are created 
 '''
-import database_connect
-import os
-import sqlite3
+import database_utils
 
-
-def execute_query(connection, query, task = None):
-    
-    
-    cursor = connection.cursor()
-    try:
-        if task is None:
-            cursor.execute(query)
-        else:
-            cursor.execute(query, task)
-        connection.commit()
-        print("Query executed successfully")
-    except sqlite3.Error as e:
-        print(f"The error '{e}' occurred")
-    
-    #close the cursor
-    cursor.close()
-
-def execute_fetchall(connection, query):
-    '''
-    Parameters
-    ----------
-    connection. query : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    None.
-
-    '''
-    cursor = connection.cursor()
-    try:
-        res = cursor.execute(query).fetchall()
-        print("Query fetched successfully")
-    except sqlite3.Error as e:
-        print(f"The error '{e}' occurred")
-        res = None
-
-    #close the cursor
-    cursor.close()
-    return res
-
-
-
-def create_university_table(path = os.path.dirname(os.getcwd()), dbname = 'database.sqlite'):
+def create_university_table(connection):
     """
+    function to create university table
     Parameters
     ----------
-    path : str, optional
-        path to the database. The default is os.path.dirname(os.getcwd()).
-    dbname : TYPE, optional
-        database name. The default is 'database.sqlite'.
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
     None.
 
     """
-    # connect to the database
-    connection = database_connect.create_or_connect_db(path = path, name = dbname)
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
     
     # create the query 
     
@@ -80,43 +36,40 @@ def create_university_table(path = os.path.dirname(os.getcwd()), dbname = 'datab
     
     # define the cursor and execute querry 
     
-    execute_query(connection, query)
-        
-    # close the connection
+    database_utils.execute_query(connection, query)
     
-    connection.close()
+def create_laboratory_table(connection):
+    """
+    Parameters
+    ----------
+    connection : SQL connection.
+        Connection to the SQL database.
+
+    Returns
+    -------
+    None.
+
+    """
+    
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
+    
+    query = """
+    CREATE TABLE IF NOT EXISTS laboratory(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        university_id INT,
+        FOREIGN KEY(university_id) REFERENCES university(id)
+        );
+    """
+    
+    # define the cursor and execute querry 
+    
+    database_utils.execute_query(connection, query)
+        
     
 if __name__ == '__main__':
-    create_university_table()
-
-# def create_data_table(path = os.path.dirname(os.getcwd()), dbname = 'database.sqlite'):
-#     """
-    
-
-#     Parameters
-#     ----------
-#     path : str, optional
-#         path to the database. The default is os.path.dirname(os.getcwd()).
-#     dbname : TYPE, optional
-#         database name. The default is 'database.sqlite'.
-
-#     Returns
-#     -------
-#     None.
-
-#     """
-#     # connect to the database
-#     connection = database_connect.create_or_connect_db(path = path, name = dbname)
-    
-#     # create the query 
-    
-#     querry = """
-#     CREATE TABLE IF NOT EXISTS data(
-#         id INTEGER PRMARY KEY AUTOINCREMENT,
-#         date DATE NOT  NULL,
-#         magnetic_field NUMERIC, 
-#         temperature NUMERIC,
-        
-#         );
-#     """
-    
+    create_laboratory_table()
