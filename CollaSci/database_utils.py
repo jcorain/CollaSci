@@ -1,5 +1,5 @@
 """
-module used to create and be connected to the database
+module used for utils function related to the database
 """
 
 import sqlite3
