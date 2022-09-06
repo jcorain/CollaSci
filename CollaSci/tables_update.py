@@ -712,6 +712,77 @@ def update_batch_table(name, mass, color, Type, creation_date, compound_id, grow
     if res_exec:
         print('The batch {} has been succesfully added to the database.'.format(name))
 
+
+def update_project_table(name, responsible_id, connection):
+    '''
+    function to update compound table data
+
+    Parameters
+    ----------
+    name : str
+        Name of the experiment setup.
+    responsible_id : int
+        id related to the user responsble for the project
+    connection : SQL connection.
+        Connection to the SQL database
+
+    Returns
+    -------
+    None.
+
+    '''
+    # check that the values are not null 
+    if name is None:
+        print('There is no project name. Please provide it')
+        return None
+
+    if responsible_id is None:
+        print('There is no responsible_id for the experiment setup. Please provide it')
+        return None
+    
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
+    
+    # set teh foreign keys on 
+    
+    connection.execute("PRAGMA foreign_keys = ON;")
+    
+    # check if the laboratory table exists 
+    
+    res = database_utils.check_table_exists(connection, 'project')
+    
+    if res == False:
+        tables_create.create_project_table(connection)
+        print('The project table has been created.')
+    
+    # if the table exists check that the values you want to add are new 
+    
+    else:
+        # get the existing values 
+        
+        existing_name = database_utils.fetchall_query(connection, 'SELECT name FROM project;')
+        for val in existing_name:
+            if val[0] == name:
+                print('The project {} already exists and will not be added to the database.'.format(name))
+                return None
+
+    # create the cursor 
+        
+    query = """
+    INSERT INTO 
+        project(name, responsible_id)
+    VALUES
+        (?, ?)
+    """
+    
+    res_exec = database_utils.execute_query(connection, query, 
+                                            values = (name, responsible_id))
+    
+    if res_exec:
+        print('The project {} has been succesfully added to the database.'.format(name))
         
 if __name__ == '__main__':
     
@@ -1047,6 +1118,33 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM batch;").fetchall())
     cur.close()
     
+    print('\nCreate the first project\n')
+    project_name = "Super project"
+    project_responsible_id = 1
+    update_project_table(project_name, project_responsible_id, connection)
+    
+    print('\nCreate the second project\n')
+    project_name = "Super other project"
+    project_responsible_id = 3
+    update_project_table(project_name, project_responsible_id, connection)
+    
+    print('\ncheck what happens if we recreate the entry\n')
+    
+    update_project_table(project_name, project_responsible_id, connection)
+    
+    print("\nCheck wrong responsible id\n")
+    
+    project_name = "test wrong responsible"
+    project_responsible_id = 7
+    update_project_table(project_name, project_responsible_id, connection)
+    
+    print('\ncheck project table values\n')
+    
+    cur = connection.cursor()
+    print(cur.execute("SELECT * FROM project;").fetchall())
+    cur.close()
+    
+    
     print('\ncheck all the tables values\n')
     cur = connection.cursor()
     print(cur.execute("SELECT * FROM university;").fetchall())
@@ -1058,6 +1156,7 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM user;").fetchall())
     print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
     print(cur.execute("SELECT * FROM batch;").fetchall())
+    print(cur.execute("SELECT * FROM project;").fetchall())
 
     cur.close()
     

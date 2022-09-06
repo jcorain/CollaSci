@@ -322,4 +322,38 @@ def create_batch_table(connection):
      
      # define the cursor and execute querry 
      
+     database_utils.execute_query(connection, query)
+     
+def create_project_table(connection):
+     """
+     Function to create the project table
+     
+     Parameters
+     ----------
+     connection : SQL connection.
+         Connection to the SQL database.
+
+     Returns
+     -------
+     None.
+
+     """
+     
+     # check connection 
+     
+     if connection is None:
+         print('There is no connection to an SQL database. Please initiate it')
+         return None
+     
+     query = """
+     CREATE TABLE IF NOT EXISTS project(
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         name TEXT NOT NULL,
+         responsible_id INT NOT NULL,
+         FOREIGN KEY(responsible_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
+         );
+     """
+     
+     # define the cursor and execute querry 
+     
      database_utils.execute_query(connection, query)  
