@@ -491,6 +491,95 @@ def update_user_table(firstname, lastname, status_id, laboratory_id, connection)
         laboratory_name = database_utils.fetchall_query(connection, 'SELECT name FROM laboratory WHERE id = {}'.format(laboratory_id))[0][0]
         print('The user {} {} ({}) has been succesfully added to the database.'.format(firstname, lastname, laboratory_name))
 
+
+def update_experiment_setup_table(name, room_name, start_date, min_field, max_field, min_temperature, max_temperature,
+                                   experiment_type_id, responsible_id, connection):
+    '''
+    function to update compound table data
+
+    Parameters
+    ----------
+    name : str
+        Name of the compound.
+    formula : str
+        Chemical formula of the compound.
+    material_type_id : int
+        ID of the material_type related to the laboratory
+
+    Returns
+    -------
+    None.
+
+    '''
+    # check that the values are not null 
+    if name is None:
+        print('There is no experiment setup name. Please provide it')
+        return None
+    
+    if room_name is None:
+        print('There is no experiment setup room name. Please provide it')
+        return None
+    
+    
+    if start_date is None:
+        print('There is no experiment setup start date. Please provide it')
+        return None
+
+    if experiment_type_id is None:
+        print('There is no experiment_type_id for the experiment setup. Please provide it')
+        return None
+
+    if responsible_id is None:
+        print('There is no responsible_id for the experiment setup. Please provide it')
+        return None
+    
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
+    
+    # set teh foreign keys on 
+    
+    connection.execute("PRAGMA foreign_keys = ON;")
+    
+    # check if the laboratory table exists 
+    
+    res = database_utils.check_table_exists(connection, 'experiment_setup')
+    
+    if res == False:
+        tables_create.create_experiment_setup_table(connection)
+        print('The experiment table has been created.')
+    
+    # if the table exists check that the values you want to add are new 
+    
+    else:
+        # get the existing values 
+        
+        existing_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup;')
+        for val in existing_name:
+            if val[0] == name:
+                print('The experiment setup {} already exists and will not be added to the database.'.format(name))
+                return None
+
+    # create the cursor 
+        
+    query = """
+    INSERT INTO 
+        experiment_setup(name, room_name, start_date, min_field, max_field, min_temperature, max_temperature,
+                         experiment_type_id, responsible_id)
+    VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    
+    res_exec = database_utils.execute_query(connection, query, 
+                                            values = (name, room_name, start_date, min_field, 
+                                                      max_field, min_temperature, max_temperature,
+                                                      experiment_type_id, responsible_id))
+    
+    if res_exec:
+        print('The experiment setup {} has been succesfully added to the database.'.format(name))
+
         
 if __name__ == '__main__':
     
@@ -698,6 +787,72 @@ if __name__ == '__main__':
     cur = connection.cursor()
     print(cur.execute("SELECT * FROM user;").fetchall())
     cur.close()
+
+    print('\ncreate the first experimental setup\n')
+    
+    experimental_setup_name = 'MMPS He4'
+    roomname = 'Salon'
+    experimental_setup_start_date = '25/05/2018'
+    min_field = 0
+    max_field = 5
+    min_temperature = 1.5
+    max_temperature = 300
+    experiment_type_id = 1
+    responsible_id = 1
+    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
+    
+    print('\ncreate the second experimental setup\n')
+    
+    experimental_setup_name = 'MMPS He4 bis'
+    roomname = 'Salon'
+    experimental_setup_start_date = '25/05/2018'
+    min_field = None
+    max_field = None
+    min_temperature = None
+    max_temperature = None
+    experiment_type_id = 1
+    responsible_id = 2
+    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
+    
+    print('\ncheck what happens if we recreate the entry\n')
+    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+                                max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
+    
+    print("\nTest wrong experiment type for experiment setup\n")
+    
+    experimental_setup_name = 'MMPS with wrong experiement type'
+    roomname = 'Salon'
+    experimental_setup_start_date = '25/05/2018'
+    min_field = None
+    max_field = None
+    min_temperature = None
+    max_temperature = None
+    experiment_type_id = 5
+    responsible_id = 2
+    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
+    
+    print("\nTest wrong responsible type for experiment setup\n")
+    
+    experimental_setup_name = 'MMPS with wrong responsible'
+    roomname = 'Salon'
+    experimental_setup_start_date = '25/05/2018'
+    min_field = None
+    max_field = None
+    min_temperature = None
+    max_temperature = None
+    experiment_type_id = 1
+    responsible_id = 6
+    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
+    
+    print('\ncheck experiment setup table values\n')
+    
+    cur = connection.cursor()
+    print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
+    cur.close()
     
     print('\ncheck all the tables values\n')
     cur = connection.cursor()
@@ -708,6 +863,7 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM compound;").fetchall())
     print(cur.execute("SELECT * FROM experiment_type;").fetchall())
     print(cur.execute("SELECT * FROM user;").fetchall())
+    print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
 
     cur.close()
     

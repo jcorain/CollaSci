@@ -240,4 +240,46 @@ def create_user_table(connection):
      
      # define the cursor and execute querry 
      
+     database_utils.execute_query(connection, query)
+     
+def create_experiment_setup_table(connection):
+     """
+     Function to create the user table
+     
+     Parameters
+     ----------
+     connection : SQL connection.
+         Connection to the SQL database.
+
+     Returns
+     -------
+     None.
+
+     """
+     
+     # check connection 
+     
+     if connection is None:
+         print('There is no connection to an SQL database. Please initiate it')
+         return None
+     
+     query = """
+     CREATE TABLE IF NOT EXISTS experiment_setup(
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         name TEXT NOT NULL,
+         room_name TEXT NOT NULL,
+         start_date DATE NOT NULL,
+         min_field REAL,
+         max_field REAL,
+         min_temperature REAL,
+         max_temperature REAL,
+         experiment_type_id INT NOT NULL,
+         responsible_id INT NOT NULL,
+         FOREIGN KEY(experiment_type_id) REFERENCES experiment_type(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY(responsible_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
+         );
+     """
+     
+     # define the cursor and execute querry 
+     
      database_utils.execute_query(connection, query)  
