@@ -244,7 +244,7 @@ def create_user_table(connection):
      
 def create_experiment_setup_table(connection):
      """
-     Function to create the user table
+     Function to create the experiment_setup table
      
      Parameters
      ----------
@@ -277,6 +277,46 @@ def create_experiment_setup_table(connection):
          responsible_id INT NOT NULL,
          FOREIGN KEY(experiment_type_id) REFERENCES experiment_type(id) ON UPDATE CASCADE ON DELETE CASCADE,
          FOREIGN KEY(responsible_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
+         );
+     """
+     
+     # define the cursor and execute querry 
+     
+     database_utils.execute_query(connection, query)
+     
+def create_batch_table(connection):
+     """
+     Function to create the batch table
+     
+     Parameters
+     ----------
+     connection : SQL connection.
+         Connection to the SQL database.
+
+     Returns
+     -------
+     None.
+
+     """
+     
+     # check connection 
+     
+     if connection is None:
+         print('There is no connection to an SQL database. Please initiate it')
+         return None
+     
+     query = """
+     CREATE TABLE IF NOT EXISTS batch(
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         name TEXT NOT NULL,
+         mass REAL NOT NULL,
+         color VARCHAR(50) NOT NULL,
+         type VARCHAR(50) NOT NULL,
+         creation_date DATE NOT NULL, 
+         compound_id INT NOT NULL,
+         grower_id INT NOT NULL,
+         FOREIGN KEY(compound_id) REFERENCES compound(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY(grower_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
          );
      """
      

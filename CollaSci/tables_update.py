@@ -96,6 +96,8 @@ def update_laboratory_table(name, university_id, connection):
         Name of the laboratory.
     university_id : int
         ID of the university related to the laboratory
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -163,6 +165,8 @@ def update_status_table(name, connection):
     ----------
     name : str
         Name of the status.
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -219,6 +223,8 @@ def update_material_type_table(name, connection):
     ----------
     name : str
         Name of the material type.
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -278,7 +284,9 @@ def update_compound_table(name, formula, material_type_id, connection):
     formula : str
         Chemical formula of the compound.
     material_type_id : int
-        ID of the material_type related to the laboratory
+        ID of the material_type related to the compound
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -350,6 +358,8 @@ def update_experiment_type_table(name, connection):
     ----------
     name : str
         Name of the experiment type.
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -404,12 +414,16 @@ def update_user_table(firstname, lastname, status_id, laboratory_id, connection)
 
     Parameters
     ----------
-    name : str
-        Name of the compound.
-    formula : str
-        Chemical formula of the compound.
-    material_type_id : int
-        ID of the material_type related to the laboratory
+    firstname : str
+        Firtsname of the user.
+    Lastname : str
+        Lastname of the user.
+    status_id : int
+        ID of the status related to the user
+    laboratory_id : int
+        ID of the user laboratory
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -500,11 +514,25 @@ def update_experiment_setup_table(name, room_name, start_date, min_field, max_fi
     Parameters
     ----------
     name : str
-        Name of the compound.
-    formula : str
-        Chemical formula of the compound.
-    material_type_id : int
-        ID of the material_type related to the laboratory
+        Name of the experiment setup.
+    room_name : str
+        name of the room where the setup is situated.
+    start_date : date
+        date when the experiment has been setup
+    min_field : float
+        minimum magnetic field in T (can be None)
+    max_field : float
+        maximum magnetic field in T (can be None)
+    min_temperature : float
+        minimum temperature in K (can be None)
+    max_temperature : float
+        maximum temperature in K (can be None)
+    experiment_type_id : int
+        id related to the experiment type
+    responsible_id : int
+        id related to the user responsble for the experiment setup
+    connection : SQL connection.
+        Connection to the SQL database
 
     Returns
     -------
@@ -549,7 +577,7 @@ def update_experiment_setup_table(name, room_name, start_date, min_field, max_fi
     
     if res == False:
         tables_create.create_experiment_setup_table(connection)
-        print('The experiment table has been created.')
+        print('The experiment setup table has been created.')
     
     # if the table exists check that the values you want to add are new 
     
@@ -579,6 +607,110 @@ def update_experiment_setup_table(name, room_name, start_date, min_field, max_fi
     
     if res_exec:
         print('The experiment setup {} has been succesfully added to the database.'.format(name))
+
+
+def update_batch_table(name, mass, color, Type, creation_date, compound_id, grower_id, connection):
+    '''
+    function to update batch table data
+
+    Parameters
+    ----------
+    name : str
+        Name of the batch
+    mass : float
+        Mass synthetized in g
+    color : str
+        Principal color of the batch
+    Type : str 
+        Type of the batch (powder, single cristal, polycristal)
+    creation_date : date
+        Creation date of the batch
+    compound_id : int
+        id related to the batch compound
+    grower_id : int
+        ID of the user who grows the batch
+    connection : SQL connection.
+        Connection to the SQL database
+
+    Returns
+    -------
+    None.
+
+    '''
+    # check that the values are not null 
+    if name is None:
+        print('There is no batch name. Please provide it')
+        return None
+    
+    if mass is None:
+        print('There is no batch mass. Please provide it')
+        return None
+    
+    
+    if color is None:
+        print('There is no batch color. Please provide it')
+        return None
+
+    if Type not in ['powder','polycristal','single cristal']:
+        print('The batch type is not in the list "powder", "polycristal" or "single cristal". Please make a choice')
+        return None
+
+    if creation_date is None:
+        print('There is no batch creation date. Please provide it')
+        return None
+    
+    if compound_id is None:
+        print('There is no compound_id for the batch. Please provide it')
+        return None
+    
+    if grower_id is None:
+        print('There is no grower_id for the batch. Please provide it')
+        return None
+    
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
+    
+    # set teh foreign keys on 
+    
+    connection.execute("PRAGMA foreign_keys = ON;")
+    
+    # check if the laboratory table exists 
+    
+    res = database_utils.check_table_exists(connection, 'batch')
+    
+    if res == False:
+        tables_create.create_batch_table(connection)
+        print('The batch table has been created.')
+    
+    # if the table exists check that the values you want to add are new 
+    
+    else:
+        # get the existing values 
+        
+        existing_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch;')
+        for val in existing_name:
+            if val[0] == name:
+                print('The batch {} already exists and will not be added to the database.'.format(name))
+                return None
+
+    # create the cursor 
+        
+    query = """
+    INSERT INTO 
+        batch(name, mass, color, type, creation_date, compound_id, grower_id)
+    VALUES
+        (?, ?, ?, ?, ?, ?, ?)
+    """
+    
+    res_exec = database_utils.execute_query(connection, query, 
+                                            values = (name, mass, color, Type, creation_date,
+                                                      compound_id, grower_id))
+    
+    if res_exec:
+        print('The batch {} has been succesfully added to the database.'.format(name))
 
         
 if __name__ == '__main__':
@@ -854,6 +986,67 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
     cur.close()
     
+    print('\nCreate the first batch')
+    batch_name = "DQVOF 1"
+    mass = 100
+    color = 'green'
+    Type = "powder"
+    creation_date = '2019-10-12'
+    compound_id = 1
+    grower_id = 1
+    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    
+    
+    print('\nCreate the second batch')
+    batch_name = "Test 2002"
+    mass = 200
+    color = 'green'
+    Type = "single cristal"
+    creation_date = '2017-10-12'
+    compound_id = 2
+    grower_id = 3
+    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    
+    print('\ncheck what happens if we recreate the entry\n')
+    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    
+    print('\nCheck wrong batch type\n')
+    
+    batch_name = "Test wrong batch type"
+    mass = 200
+    color = 'green'
+    Type = "test"
+    creation_date = '2017-10-12'
+    compound_id = 2
+    grower_id = 3
+    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    
+    print('\nCheck worng compound.')
+    batch_name = "Test wrong compound"
+    mass = 200
+    color = 'green'
+    Type = "single cristal"
+    creation_date = '2017-10-12'
+    compound_id = 5
+    grower_id = 3
+    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    
+    print('\nCheck wrong grower.')
+    batch_name = "Test wrong grower"
+    mass = 200
+    color = 'green'
+    Type = "single cristal"
+    creation_date = '2017-10-12'
+    compound_id = 2
+    grower_id = 6
+    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    
+    print('\ncheck batch table values\n')
+    
+    cur = connection.cursor()
+    print(cur.execute("SELECT * FROM batch;").fetchall())
+    cur.close()
+    
     print('\ncheck all the tables values\n')
     cur = connection.cursor()
     print(cur.execute("SELECT * FROM university;").fetchall())
@@ -864,6 +1057,7 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM experiment_type;").fetchall())
     print(cur.execute("SELECT * FROM user;").fetchall())
     print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
+    print(cur.execute("SELECT * FROM batch;").fetchall())
 
     cur.close()
     
