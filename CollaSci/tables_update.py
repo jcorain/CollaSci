@@ -5,6 +5,9 @@ module to update tables
 import database_utils
 import tables_create
 
+import os
+import shutil
+
 # set the foreign_keys on 
 
 def update_university_table(name, country, city, address, connection):
@@ -784,6 +787,221 @@ def update_project_table(name, responsible_id, connection):
     if res_exec:
         print('The project {} has been succesfully added to the database.'.format(name))
         
+        
+def update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                      experiment_setup_id, user_id, batch_id, project_id, connection):
+    '''
+    function to update data table data
+
+    Parameters
+    ----------
+    mass : float
+        mass of the sample in g.
+    experiment_no : int
+        Number of time the user do the same experiment.
+    field : float
+        field used for experiemrnt in T (can be None)
+    temperature : float
+        temmperature used for experiment in K (can be None)
+    date: Date
+        date when the experiement have been made
+    path_import : str
+        path to the data to copy and import
+    comment : comment 
+        comment on the experiement (can be None)
+    experiment_setup_id : int
+        ID of the experiemental setup used
+    user_id : int 
+        ID of the user who performed the experiment
+    batch_id : int
+        ID of the used batch
+    project_id : int 
+        ID of the project 
+    connection : SQL connection.
+        Connection to the SQL database
+
+    Returns
+    -------
+    None.
+
+    '''
+    # check that the values are not null 
+    if mass is None:
+        print('There is no sample mass. Please provide it')
+        return None
+
+    if experiment_no is None:
+        print('There is no experiment number. Please provide it')
+        return None
+    
+
+    if date is None:
+        print('There is no date for the experiment. Please provide it')
+        return None
+    
+    if path_import is None:
+        print('There is no path to retrieve the data. Please provide it')
+        return None
+    
+    if experiment_setup_id is None:
+        print('There is no experiement setup id for the data. Please provide it')
+        return None
+    
+    if user_id is None:
+        print('There is no user id for the data. Please provide it')
+        return None
+    
+    if batch_id is None:
+        print('There is no batch id for the data. Please provide it')
+        return None
+    
+    if project_id is None:
+        print('There is no project id for the data. Please provide it')
+        return None
+    
+    # check connection 
+    
+    if connection is None:
+        print('There is no connection to an SQL database. Please initiate it')
+        return None
+    
+    # set teh foreign keys on 
+    
+    connection.execute("PRAGMA foreign_keys = ON;")
+    
+    # create the pathname of the experimental setup and check that it does not exists  
+    # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
+    # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
+    
+    app_rep = os.path.dirname(os.getcwd())
+    try:
+        project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
+    except IndexError:
+        print("The project_id does not exists. Please provide a new one.")
+        return None
+    
+    try:
+        compound_id = database_utils.fetchall_query(connection, 'SELECT compound_id FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        compound_name = database_utils.fetchall_query(connection, 'SELECT name FROM compound WHERE id = {};'.format(compound_id))[0][0]
+        batch_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch WHERE id = {};'.format(batch_id))[0][0]
+    except IndexError:
+        print("The batch_id does not exists. Please provide a new one.")
+        return None
+    
+    try:
+        experiment_type_id = database_utils.fetchall_query(connection, 'SELECT experiment_type_id FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        experiment_type_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_type WHERE id = {};'.format(experiment_type_id))[0][0]
+        experiment_setup_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+    except IndexError:
+        print("The experiment_setup_id does not exists. Please provide a new one.")
+        return None
+    
+    try:
+        user_lastname = database_utils.fetchall_query(connection, 'SELECT lastname FROM user WHERE id = {};'.format(user_id))[0][0]
+    except IndexError:
+        print("The user_id does not exists. Please provide a new one.")
+        return None
+
+
+    if field is not None:
+        field_name = str(field) + 'T'
+    else:
+        field_name = ''
+    if temperature is not None:
+        temp_name = str(temperature) + 'K'
+    else:
+        temp_name = ''
+    date_name = ''.join([date[0:3], date[5:6], date[8:9]])
+
+    # create the filename
+    
+    new_filename = '_'.join([batch_name, 
+                             experiment_type_name, 
+                             experiment_setup_name, 
+                             user_lastname, 
+                             field_name, 
+                             temp_name, 
+                             str(experiment_no), 
+                             date_name]) + '.csv'
+    
+    
+    
+    new_path = os.path.join(app_rep,
+                            'data',
+                            project_name,
+                            compound_name,
+                            batch_name,
+                            experiment_type_name,
+                            experiment_setup_name,
+                            new_filename)
+        
+    # check if the data table exists 
+    
+    res = database_utils.check_table_exists(connection, 'data')
+    
+    if res == False:
+        tables_create.create_data_table(connection)
+        print('The data table has been created.')
+    
+    # if the table exists check that the values you want to add are new 
+    
+    else:    
+   
+        existing_path = database_utils.fetchall_query(connection, 'SELECT new_path FROM data;')
+        for val in existing_path:
+            if val[0] == new_path:
+                print('The data {} already exists and will not be added to the database.'.format(new_path))
+                return None
+
+    # create the cursor 
+        
+    query = """
+    INSERT INTO 
+        data(
+            mass,
+            experiment_no,
+            field, 
+            temp,
+            date,
+            path_import,
+            new_path,
+            comment, 
+            experiment_setup_id,
+            user_id,
+            batch_id,
+            project_id)
+    VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    
+    res_exec = database_utils.execute_query(connection, query, 
+                                            values = (mass,
+                                                      experiment_no,
+                                                      field, 
+                                                      temperature,
+                                                      date,
+                                                      path_import,
+                                                      new_path,
+                                                      comment, 
+                                                      experiment_setup_id,
+                                                      user_id,
+                                                      batch_id,
+                                                      project_id))
+    
+    if res_exec:
+        print('The data {} has been succesfully added to the database.'.format(new_path))
+    
+        # if necessary copy the data form the old path to the new one 
+    
+        if path_import != new_path:
+            
+            # create the new path if it does not exists 
+        
+            if not os.path.exists(new_path):
+                os.makedirs(os.path.dirname(new_path))
+            
+            shutil.copyfile(path_import, new_path)
+        
 if __name__ == '__main__':
     
     print('\nCreate connection to the database\n')
@@ -1144,6 +1362,123 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM project;").fetchall())
     cur.close()
     
+    print('\nCreate the first data\n')
+    
+    mass = 100
+    experiment_no = 1
+    field = 2 
+    temperature = 300 
+    date = '2018-01-21'
+    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    comment = None
+    experiment_setup_id = 1
+    user_id = 1
+    batch_id = 1
+    project_id = 1
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    
+    print('\nCreate the second data\n')
+    
+    mass = 150
+    experiment_no = 5
+    field = None 
+    temperature = None 
+    date = '2018-12-21'
+    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    comment = None
+    experiment_setup_id = 2
+    user_id = 3
+    batch_id = 1
+    project_id = 2
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    print('\ncheck what happens if we recreate the entry\n')
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    print('\nCheck wrong experiement_setup\n')
+    
+    mass = 150
+    experiment_no = 5
+    field = None 
+    temperature = None 
+    date = '2018-12-21'
+    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    comment = None
+    experiment_setup_id = 5
+    user_id = 3
+    batch_id = 1
+    project_id = 2
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    print('\nCheck wrong user\n')
+    
+    mass = 150
+    experiment_no = 5
+    field = None 
+    temperature = None 
+    date = '2018-12-21'
+    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    comment = None
+    experiment_setup_id = 1
+    user_id = 7
+    batch_id = 1
+    project_id = 2
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+
+
+    print('\nCheck wrong batch\n')
+    
+    mass = 150
+    experiment_no = 5
+    field = None 
+    temperature = None 
+    date = '2018-12-21'
+    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    comment = None
+    experiment_setup_id = 1
+    user_id = 3
+    batch_id = 10
+    project_id = 2
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+
+
+    print('\nCHeck wrong project\n')
+    
+    mass = 150
+    experiment_no = 5
+    field = None 
+    temperature = None 
+    date = '2018-12-21'
+    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    comment = None
+    experiment_setup_id = 1
+    user_id = 3
+    batch_id = 1
+    project_id = 15
+    
+    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+                          experiment_setup_id, user_id, batch_id, project_id, connection)
+
+    
+
+    print('\ncheck data table values\n')
+    
+    cur = connection.cursor()
+    print(cur.execute("SELECT * FROM data;").fetchall())
+    cur.close()
     
     print('\ncheck all the tables values\n')
     cur = connection.cursor()
@@ -1157,6 +1492,7 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
     print(cur.execute("SELECT * FROM batch;").fetchall())
     print(cur.execute("SELECT * FROM project;").fetchall())
+    print(cur.execute("SELECT * FROM data;").fetchall())
 
     cur.close()
     

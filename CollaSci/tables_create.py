@@ -356,4 +356,51 @@ def create_project_table(connection):
      
      # define the cursor and execute querry 
      
+     database_utils.execute_query(connection, query)
+     
+def create_data_table(connection):
+     """
+     Function to create the data table
+     
+     Parameters
+     ----------
+     connection : SQL connection.
+         Connection to the SQL database.
+
+     Returns
+     -------
+     None.
+
+     """
+     
+     # check connection 
+     
+     if connection is None:
+         print('There is no connection to an SQL database. Please initiate it')
+         return None
+     
+     query = """
+     CREATE TABLE IF NOT EXISTS data(
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         mass REAL NOT NULL,
+         experiment_no INT NOT NULL,
+         field REAL, 
+         temp REAL,
+         date DATE NOT NULL,
+         path_import TEXT NOT NULL,
+         new_path TEXT NOT NULL,
+         comment TEXT, 
+         experiment_setup_id INT NOT NULL,
+         user_id INT NOT NULL,
+         batch_id INT NOT NULL,
+         project_id INT NOT NULL,
+         FOREIGN KEY(experiment_setup_id) REFERENCES experiment_setup(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY(user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY(batch_id) REFERENCES batch(id) ON UPDATE CASCADE ON DELETE CASCADE,
+         FOREIGN KEY(project_id) REFERENCES project(id) ON UPDATE CASCADE ON DELETE CASCADE
+         );
+     """
+     
+     # define the cursor and execute querry 
+     
      database_utils.execute_query(connection, query)  
