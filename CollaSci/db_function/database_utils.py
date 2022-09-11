@@ -5,7 +5,7 @@ module used for utils function related to the database
 import sqlite3
 import os
 
-def create_or_connect_db(path = os.path.dirname(os.getcwd()), name = 'database.sqlite'):
+def create_or_connect_db(path = os.path.dirname(os.path.dirname(os.getcwd())), name = 'database.sqlite'):
     '''
     Function to create a new database
 
@@ -36,7 +36,6 @@ def create_or_connect_db(path = os.path.dirname(os.getcwd()), name = 'database.s
         
     return connection 
         
-
 def execute_query(connection, query, values = None):
     '''
     Function to commit some querry to the database with or without values 
@@ -72,9 +71,7 @@ def execute_query(connection, query, values = None):
         print(f"The error '{e}' occurred")
         #close the cursor
         cursor.close()
-        return False
-    
-    
+        return False   
 
 def fetchall_query(connection, query):
     '''
@@ -167,8 +164,3 @@ def delete_id_from_table(connection, table_name, id_num):
 
     #close the cursor
     cursor.close()
-
-    
-
-if __name__ == '__main__':
-    connection = create_or_connect_db()

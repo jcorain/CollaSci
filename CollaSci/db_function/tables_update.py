@@ -873,7 +873,7 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
     # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
     # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
     
-    app_rep = os.path.dirname(os.getcwd())
+    app_rep = os.path.dirname(os.path.dirname(os.getcwd()))
     try:
         project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
     except IndexError:
@@ -1471,8 +1471,6 @@ if __name__ == '__main__':
     
     add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
-
-    
 
     print('\ncheck data table values\n')
     
