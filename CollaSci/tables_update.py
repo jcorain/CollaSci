@@ -1,5 +1,5 @@
 """
-module to update tables 
+module to change tables 
 """
 
 import database_utils
@@ -10,9 +10,9 @@ import shutil
 
 # set the foreign_keys on 
 
-def update_university_table(name, country, city, address, connection):
+def add_row_university_table(name, country, city, address, connection):
     '''
-    function to update university table data
+    function to add row to  university table data
 
     Parameters
     ----------
@@ -89,9 +89,9 @@ def update_university_table(name, country, city, address, connection):
     
         
     
-def update_laboratory_table(name, university_id, connection):
+def add_row_laboratory_table(name, university_id, connection):
     '''
-    function to update laboratory table data
+    function to add row to  laboratory table data
 
     Parameters
     ----------
@@ -160,9 +160,9 @@ def update_laboratory_table(name, university_id, connection):
         print('The laboratory {} has been succesfully added to the database.'.format(name))
         
         
-def update_status_table(name, connection):
+def add_row_status_table(name, connection):
     '''
-    function to update status table data
+    function to add row to  status table data
 
     Parameters
     ----------
@@ -218,9 +218,9 @@ def update_status_table(name, connection):
     if res_exec:
         print('The status {} has been succesfully added to the database.'.format(name))
         
-def update_material_type_table(name, connection):
+def add_row_material_type_table(name, connection):
     '''
-    function to update the material type table data
+    function to add row to  the material type table data
 
     Parameters
     ----------
@@ -276,9 +276,9 @@ def update_material_type_table(name, connection):
     if res_exec:
         print('The material_type {} has been succesfully added to the database.'.format(name))
         
-def update_compound_table(name, formula, material_type_id, connection):
+def add_row_compound_table(name, formula, material_type_id, connection):
     '''
-    function to update compound table data
+    function to add row to  compound table data
 
     Parameters
     ----------
@@ -353,9 +353,9 @@ def update_compound_table(name, formula, material_type_id, connection):
     if res_exec:
         print('The compound {} has been succesfully added to the database.'.format(name))
         
-def update_experiment_type_table(name, connection):
+def add_row_experiment_type_table(name, connection):
     '''
-    function to update the experiment type table data
+    function to add row to  the experiment type table data
 
     Parameters
     ----------
@@ -411,9 +411,9 @@ def update_experiment_type_table(name, connection):
     if res_exec:
         print('The experiment_type {} has been succesfully added to the database.'.format(name))
  
-def update_user_table(firstname, lastname, status_id, laboratory_id, connection):
+def add_row_user_table(firstname, lastname, status_id, laboratory_id, connection):
     '''
-    function to update compound table data
+    function to add row to  compound table data
 
     Parameters
     ----------
@@ -509,10 +509,10 @@ def update_user_table(firstname, lastname, status_id, laboratory_id, connection)
         print('The user {} {} ({}) has been succesfully added to the database.'.format(firstname, lastname, laboratory_name))
 
 
-def update_experiment_setup_table(name, room_name, start_date, min_field, max_field, min_temperature, max_temperature,
+def add_row_experiment_setup_table(name, room_name, start_date, min_field, max_field, min_temperature, max_temperature,
                                    experiment_type_id, responsible_id, connection):
     '''
-    function to update compound table data
+    function to add row to  experiment setup table data
 
     Parameters
     ----------
@@ -612,9 +612,9 @@ def update_experiment_setup_table(name, room_name, start_date, min_field, max_fi
         print('The experiment setup {} has been succesfully added to the database.'.format(name))
 
 
-def update_batch_table(name, mass, color, Type, creation_date, compound_id, grower_id, connection):
+def add_row_batch_table(name, mass, color, Type, creation_date, compound_id, grower_id, connection):
     '''
-    function to update batch table data
+    function to add row to  batch table data
 
     Parameters
     ----------
@@ -716,9 +716,9 @@ def update_batch_table(name, mass, color, Type, creation_date, compound_id, grow
         print('The batch {} has been succesfully added to the database.'.format(name))
 
 
-def update_project_table(name, responsible_id, connection):
+def add_row_project_table(name, responsible_id, connection):
     '''
-    function to update compound table data
+    function to add row to project table data
 
     Parameters
     ----------
@@ -788,10 +788,10 @@ def update_project_table(name, responsible_id, connection):
         print('The project {} has been succesfully added to the database.'.format(name))
         
         
-def update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+def add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                       experiment_setup_id, user_id, batch_id, project_id, connection):
     '''
-    function to update data table data
+    function to add row to  data table data
 
     Parameters
     ----------
@@ -1014,11 +1014,11 @@ if __name__ == '__main__':
     university_country = 'France'
     university_city = 'Gif-sur-Yvette'
     university_address = 'Bâtiment Bréguet, 3 Rue Joliot Curie 2e ét, 91190 Gif-sur-Yvette, France'
-    update_university_table(university_name, university_country, university_city, university_address, connection)
+    add_row_university_table(university_name, university_country, university_city, university_address, connection)
     
     print('\ncheck what happens if we recreate the entry\n') 
     
-    update_university_table(university_name, university_country, university_city, university_address, connection)
+    add_row_university_table(university_name, university_country, university_city, university_address, connection)
     
     print('\ncreate the second university\n')
     
@@ -1026,7 +1026,7 @@ if __name__ == '__main__':
     university_country = "Switzerland"
     university_city = 'Villigen'
     university_address = 'PSI CH, Forschungsstrasse 111, 5232 Villigen'
-    update_university_table(university_name, university_country, university_city, university_address, connection)
+    add_row_university_table(university_name, university_country, university_city, university_address, connection)
     
     
     print('\ncheck university table values\n')
@@ -1039,29 +1039,29 @@ if __name__ == '__main__':
     
     laboratory_name = 'Laboratoire de Physique des Solides'
     university_id = 1
-    update_laboratory_table(laboratory_name, university_id, connection)
+    add_row_laboratory_table(laboratory_name, university_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n') 
     
-    update_laboratory_table(laboratory_name, university_id, connection)
+    add_row_laboratory_table(laboratory_name, university_id, connection)
     
     print('\ncreate the second laboratory\n')
     
     laboratory_name = 'Laboratoire de Physique Théoriques et de Modèles Statistiques'
     university_id = 1
-    update_laboratory_table(laboratory_name, university_id, connection)
+    add_row_laboratory_table(laboratory_name, university_id, connection)
     
     print('\ncreate the third laboratory\n') 
     
     laboratory_name = 'Laboratory for Muon Spin Spectroscopy'
     university_id = 2
-    update_laboratory_table(laboratory_name, university_id, connection)
+    add_row_laboratory_table(laboratory_name, university_id, connection)
     
     print('\ncheck what happens when the university does not exist\n') 
 
     laboratory_name = 'Laboratoire test'
     university_id = 3
-    update_laboratory_table(laboratory_name, university_id, connection)
+    add_row_laboratory_table(laboratory_name, university_id, connection)
     
     print('\ncheck laboratory table values\n')
     
@@ -1072,15 +1072,15 @@ if __name__ == '__main__':
     print('\ncreate the first status\n')
     
     status_name = 'PhD Student'
-    update_status_table(status_name, connection)
+    add_row_status_table(status_name, connection)
     
     print('\ncreate the second status\n')
     
     status_name = 'Postdoc'
-    update_status_table(status_name, connection)
+    add_row_status_table(status_name, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_status_table(status_name, connection)
+    add_row_status_table(status_name, connection)
     
     print('\ncheck status table values\n')
     
@@ -1091,15 +1091,15 @@ if __name__ == '__main__':
     print('\ncreate the first material type\n')
     
     material_type_name = 'Quantum Spin Liquid'
-    update_material_type_table(material_type_name, connection)
+    add_row_material_type_table(material_type_name, connection)
     
     print('\ncreate the second material type\n')
     
     material_type_name = 'Superconductor'
-    update_material_type_table(material_type_name, connection)
+    add_row_material_type_table(material_type_name, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_material_type_table(material_type_name, connection)
+    add_row_material_type_table(material_type_name, connection)
     
     print('\ncheck material_type table values\n')
     
@@ -1112,30 +1112,30 @@ if __name__ == '__main__':
     compound_name = 'DQVOF'
     compound_formula = '(NH4)2[C7H14N][V7O6F18]'
     material_type_id = 1
-    update_compound_table(compound_name, compound_formula, material_type_id, connection)
+    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
     
     print('\ncreate the second compound\n')
     
     compound_name = 'Herbertsmithite'
     compound_formula = 'ZnCu3(OH)6Cl2'
     material_type_id = 1
-    update_compound_table(compound_name, compound_formula, material_type_id, connection)
+    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_compound_table(compound_name, compound_formula, material_type_id, connection)
+    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
      
     print('\ncreate the third compound\n')
     
     compound_name = 'YBACUO'
     compound_formula = 'YBa2Cu3O7'
     material_type_id = 2
-    update_compound_table(compound_name, compound_formula, material_type_id, connection)
+    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
     
     print('Test compound without material type')
     compound_name = 'test'
     compound_formula = 'test'
     material_type_id = 3
-    update_compound_table(compound_name, compound_formula, material_type_id, connection)
+    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
     
     print('\ncheck compound table values\n')
     
@@ -1146,15 +1146,15 @@ if __name__ == '__main__':
     print('\ncreate the first experiement type\n')
     
     experiment_type_name = 'Heat Capacity vs Temperature'
-    update_experiment_type_table(experiment_type_name, connection)
+    add_row_experiment_type_table(experiment_type_name, connection)
     
     print('\ncreate the second experiement type\n')
     
     experiment_type_name = 'Magnetization vs Temperature'
-    update_experiment_type_table(experiment_type_name, connection)
+    add_row_experiment_type_table(experiment_type_name, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_experiment_type_table(experiment_type_name, connection)
+    add_row_experiment_type_table(experiment_type_name, connection)
     
     print('\ncheck experiment_type table values\n')
     
@@ -1168,7 +1168,7 @@ if __name__ == '__main__':
     user_lastname = 'Orain'
     status_id = 1
     laboratory_id = 1
-    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
     
     print('\ncreate the second user\n')
     
@@ -1176,7 +1176,7 @@ if __name__ == '__main__':
     user_lastname = 'Orain'
     status_id = 2
     laboratory_id = 3
-    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
     
     print('\ncreate the third user\n')
     
@@ -1184,24 +1184,24 @@ if __name__ == '__main__':
     user_lastname = 'Simutis'
     status_id = 2
     laboratory_id = 3
-    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
     
     print('\nTest user without status id.\n')
     user_firstname = 'Jean-Christophe'
     user_lastname = 'Orain'
     status_id = 3
     laboratory_id = 2
-    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
     
     print('\nTest user without laboratory id.\n')
     user_firstname = 'Jean-Christophe'
     user_lastname = 'Orain'
     status_id = 2
     laboratory_id = 4
-    update_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
+    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
     
     print('\ncheck user table values\n')
     
@@ -1220,7 +1220,7 @@ if __name__ == '__main__':
     max_temperature = 300
     experiment_type_id = 1
     responsible_id = 1
-    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
                                     max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
     
     print('\ncreate the second experimental setup\n')
@@ -1234,11 +1234,11 @@ if __name__ == '__main__':
     max_temperature = None
     experiment_type_id = 1
     responsible_id = 2
-    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
                                     max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
                                 max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
     
     print("\nTest wrong experiment type for experiment setup\n")
@@ -1252,7 +1252,7 @@ if __name__ == '__main__':
     max_temperature = None
     experiment_type_id = 5
     responsible_id = 2
-    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
                                     max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
     
     print("\nTest wrong responsible type for experiment setup\n")
@@ -1266,7 +1266,7 @@ if __name__ == '__main__':
     max_temperature = None
     experiment_type_id = 1
     responsible_id = 6
-    update_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
+    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
                                     max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
     
     print('\ncheck experiment setup table values\n')
@@ -1283,7 +1283,7 @@ if __name__ == '__main__':
     creation_date = '2019-10-12'
     compound_id = 1
     grower_id = 1
-    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
     
     
     print('\nCreate the second batch')
@@ -1294,10 +1294,10 @@ if __name__ == '__main__':
     creation_date = '2017-10-12'
     compound_id = 2
     grower_id = 3
-    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
-    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
     
     print('\nCheck wrong batch type\n')
     
@@ -1308,7 +1308,7 @@ if __name__ == '__main__':
     creation_date = '2017-10-12'
     compound_id = 2
     grower_id = 3
-    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
     
     print('\nCheck worng compound.')
     batch_name = "Test wrong compound"
@@ -1318,7 +1318,7 @@ if __name__ == '__main__':
     creation_date = '2017-10-12'
     compound_id = 5
     grower_id = 3
-    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
     
     print('\nCheck wrong grower.')
     batch_name = "Test wrong grower"
@@ -1328,7 +1328,7 @@ if __name__ == '__main__':
     creation_date = '2017-10-12'
     compound_id = 2
     grower_id = 6
-    update_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
+    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
     
     print('\ncheck batch table values\n')
     
@@ -1339,22 +1339,22 @@ if __name__ == '__main__':
     print('\nCreate the first project\n')
     project_name = "Super project"
     project_responsible_id = 1
-    update_project_table(project_name, project_responsible_id, connection)
+    add_row_project_table(project_name, project_responsible_id, connection)
     
     print('\nCreate the second project\n')
     project_name = "Super other project"
     project_responsible_id = 3
-    update_project_table(project_name, project_responsible_id, connection)
+    add_row_project_table(project_name, project_responsible_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
     
-    update_project_table(project_name, project_responsible_id, connection)
+    add_row_project_table(project_name, project_responsible_id, connection)
     
     print("\nCheck wrong responsible id\n")
     
     project_name = "test wrong responsible"
     project_responsible_id = 7
-    update_project_table(project_name, project_responsible_id, connection)
+    add_row_project_table(project_name, project_responsible_id, connection)
     
     print('\ncheck project table values\n')
     
@@ -1376,7 +1376,7 @@ if __name__ == '__main__':
     batch_id = 1
     project_id = 1
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
     
     
@@ -1394,12 +1394,12 @@ if __name__ == '__main__':
     batch_id = 1
     project_id = 2
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
     
     print('\ncheck what happens if we recreate the entry\n')
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
     
     print('\nCheck wrong experiement_setup\n')
@@ -1416,7 +1416,7 @@ if __name__ == '__main__':
     batch_id = 1
     project_id = 2
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
     
     print('\nCheck wrong user\n')
@@ -1433,7 +1433,7 @@ if __name__ == '__main__':
     batch_id = 1
     project_id = 2
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
 
 
@@ -1451,7 +1451,7 @@ if __name__ == '__main__':
     batch_id = 10
     project_id = 2
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
 
 
@@ -1469,7 +1469,7 @@ if __name__ == '__main__':
     batch_id = 1
     project_id = 15
     
-    update_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
 
     
