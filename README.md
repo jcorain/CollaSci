@@ -225,14 +225,3 @@ to store **unique value of new_path**.
 In addition, as this table is linked to the experiment setup, batch, project 
 and user ids, those table must be created prior to the compound one, and the 
 related values must be already in the database.
-
-## Bug reporting 
-
-To report a bug, please use the gitlab page for the package for the sake of 
-documentation. You can open a new issue on this page and we will try to tackle 
-it down.
-
-## Contribution
-
-Any contribution is most welcomed. Feel free to contact the maintainer of the 
-package for any added value.
