@@ -1493,8 +1493,26 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM batch;").fetchall())
     print(cur.execute("SELECT * FROM project;").fetchall())
     print(cur.execute("SELECT * FROM data;").fetchall())
-
     cur.close()
+    
+    print('\nCheck delete row for university\n')
+    
+    database_utils.delete_id_from_table(connection, 'university', 1)
+    print('\ncheck all the tables values\n')
+    cur = connection.cursor()
+    print(cur.execute("SELECT * FROM university;").fetchall())
+    print(cur.execute("SELECT * FROM laboratory;").fetchall())
+    print(cur.execute("SELECT * FROM status;").fetchall())
+    print(cur.execute("SELECT * FROM material_type;").fetchall())
+    print(cur.execute("SELECT * FROM compound;").fetchall())
+    print(cur.execute("SELECT * FROM experiment_type;").fetchall())
+    print(cur.execute("SELECT * FROM user;").fetchall())
+    print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
+    print(cur.execute("SELECT * FROM batch;").fetchall())
+    print(cur.execute("SELECT * FROM project;").fetchall())
+    print(cur.execute("SELECT * FROM data;").fetchall())
+    cur.close()
+    
     
     # close the connection
     connection.close()

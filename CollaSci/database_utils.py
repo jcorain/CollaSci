@@ -139,6 +139,36 @@ def check_table_exists(connection, table_name):
         return True
     else:
         return False
-   
+    
+def delete_id_from_table(connection, table_name, id_num):
+    '''
+    function to delete teh row with id id_num form a sql table
+
+    Parameters
+    ----------
+    connection : SQL connection.
+        The connection to the SQL database.
+    table_name : str
+        name of the table.
+    id_num : INT
+        The id num of the row to delete.
+
+    Returns
+    -------
+    None.
+
+    '''
+    cursor = connection.cursor()
+    try:
+        cursor.execute('DELETE FROM {} WHERE id = {}'.format(table_name, id_num))
+        print("The row number {} has been successfully deleted from the {} table".format(id_num, table_name))
+    except sqlite3.Error as e:
+        print(f"The error '{e}' occurred")
+
+    #close the cursor
+    cursor.close()
+
+    
+
 if __name__ == '__main__':
     connection = create_or_connect_db()
