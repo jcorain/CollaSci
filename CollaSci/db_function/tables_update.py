@@ -590,8 +590,13 @@ def add_row_experiment_setup_table(name, room_name, start_date, min_field, max_f
         existing_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup;')
         for val in existing_name:
             if val[0] == name:
-                print('The experiment setup {} already exists and will not be added to the database.'.format(name))
-                return None
+                # get the existing responsible id 
+                existing_responsible_id = database_utils.fetchall_query(connection, 'SELECT responsible_id FROM experiment_setup WHERE name = "{}";'.format(name))
+                for val_id in existing_responsible_id:
+                    if val_id[0] == responsible_id:
+                        responsible_name = database_utils.fetchall_query(connection, 'SELECT firstname, lastname FROM user WHERE id = {};'.format(responsible_id))[0]
+                        print('The experiment setup {} under the responsibility of {} {} already exists and will not be added to the database.'.format(name, responsible_name[0], responsible_name[1]))
+                        return None
 
     # create the cursor 
         
