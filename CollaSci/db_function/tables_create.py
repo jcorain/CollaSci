@@ -1,7 +1,7 @@
 '''
 module where the different tables are created 
 '''
-import database_utils
+import CollaSci.db_function.database_utils as database_utils
 
 def create_university_table(connection):
     """

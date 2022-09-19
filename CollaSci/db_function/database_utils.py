@@ -5,7 +5,7 @@ module used for utils function related to the database
 import sqlite3
 import os
 
-def create_or_connect_db(path = os.path.dirname(os.path.dirname(os.getcwd())), name = 'database.sqlite'):
+def create_or_connect_db(path = os.path.dirname(os.path.dirname(os.path.dirname(__file__))), name = 'database.sqlite'):
     '''
     Function to create a new database
 

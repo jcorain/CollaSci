@@ -2,8 +2,8 @@
 module to change tables 
 """
 
-import database_utils
-import tables_create
+import CollaSci.db_function.database_utils as database_utils
+import CollaSci.db_function.tables_create as tables_create
 
 import os
 import shutil
@@ -878,7 +878,7 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
     # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
     # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
     
-    app_rep = os.path.dirname(os.path.dirname(os.getcwd()))
+    app_rep = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     try:
         project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
     except IndexError:
@@ -1498,9 +1498,12 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM data;").fetchall())
     cur.close()
     
-    print('\nCheck delete row for university\n')
+    # print('\nCheck delete row for university\n')
     
     database_utils.delete_id_from_table(connection, 'university', 1)
+   
+    
+   
     print('\ncheck all the tables values\n')
     cur = connection.cursor()
     print(cur.execute("SELECT * FROM university;").fetchall())
