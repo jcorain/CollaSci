@@ -9,7 +9,7 @@ import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_update as tables_update
 
 
-@pytest.fixture(scope = "session")
+@pytest.fixture
 def create_example_db():
     '''
     Fixture to create the exmaple db if it does not exists
@@ -18,7 +18,6 @@ def create_example_db():
     -------
     None
     '''
-    
     path = os.path.join(os.path.dirname(__file__), 'data')
     name = 'database_test.sqlite'
     connection = database_utils.create_or_connect_db(path, name)
@@ -241,7 +240,7 @@ def create_example_db():
     connection.close()
 
 # get the database name and path as a fixture
-@pytest.fixture(scope = 'session')
+@pytest.fixture
 def example_connection_path_name(create_example_db):
     '''
     pytest fixture to get the path and name connection to the test database 
@@ -254,13 +253,12 @@ def example_connection_path_name(create_example_db):
     name = 'database_test.sqlite'
     
     # if the database does not exist create it
-    if not os.path.isfile(os.path.join(path, name)):
-        print('test')
-        create_example_db
+    if not os.path.exists(os.path.join(path, name)):
+        create_example_db()
         
     return path, name
 
-@pytest.fixture(scope = 'session')
+@pytest.fixture
 def example_connection(create_example_db):
     '''
     Fixture to create a connection to the database test connection
@@ -274,8 +272,8 @@ def example_connection(create_example_db):
     name = 'database_test.sqlite'
     
     # if the database does not exist create it
-    if not os.path.isfile(os.path.join(path, name)):
-        create_example_db
-    
+    if not os.path.exists(os.path.join(path, name)):
+        create_example_db()
+   
     connection = database_utils.create_or_connect_db(path = path, name = name)
     return connection

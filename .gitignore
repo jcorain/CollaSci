@@ -5,3 +5,5 @@ buid\
 */__pycache__
 *__pycache__
 ~*
+htmlcov/
+htmlcov\

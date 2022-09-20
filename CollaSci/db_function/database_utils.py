@@ -158,6 +158,7 @@ def delete_id_from_table(connection, table_name, id_num):
     cursor = connection.cursor()
     try:
         cursor.execute('DELETE FROM {} WHERE id = {}'.format(table_name, id_num))
+        connection.commit()
         print("The row number {} has been successfully deleted from the {} table".format(id_num, table_name))
     except sqlite3.Error as e:
         print(f"The error '{e}' occurred")
