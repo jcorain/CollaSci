@@ -122,7 +122,7 @@ def add_row_laboratory_table(name, university_id, connection):
         print('There is no connection to an SQL database. Please initiate it')
         return None
     
-    # set teh foreign keys on 
+    # set the foreign keys on 
     
     connection.execute("PRAGMA foreign_keys = ON;")
     

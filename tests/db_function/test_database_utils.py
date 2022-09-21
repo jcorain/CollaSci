@@ -423,13 +423,11 @@ class TestDelete_id_from_table():
         # check the users and universities names 
         universities = database_utils.fetchall_query(connection, "SELECT name FROM university;")
         user = database_utils.fetchall_query(connection, "SELECT * FROM user;")
-        
         connection.close()
 
         
         assert "The row number 1 has been successfully deleted from the university table" in captured.out
         assert universities == [('Paul Scherrer Institute',)]
-        
         
         
         

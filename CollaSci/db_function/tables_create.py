@@ -60,12 +60,13 @@ def create_laboratory_table(connection):
         print('There is no connection to an SQL database. Please initiate it')
         return None
     
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     query = """
     CREATE TABLE IF NOT EXISTS laboratory(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         university_id INT NOT NULL,
-        FOREIGN KEY(university_id) REFERENCES university(id) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY(university_id) REFERENCES university(id) ON UPDATE CASCADE ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         );
     """
     
@@ -159,6 +160,7 @@ def create_compound_table(connection):
          print('There is no connection to an SQL database. Please initiate it')
          return None
      
+     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
      query = """
      CREATE TABLE IF NOT EXISTS compound(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -226,6 +228,7 @@ def create_user_table(connection):
          print('There is no connection to an SQL database. Please initiate it')
          return None
      
+     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
      query = """
      CREATE TABLE IF NOT EXISTS user(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -263,6 +266,7 @@ def create_experiment_setup_table(connection):
          print('There is no connection to an SQL database. Please initiate it')
          return None
      
+     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
      query = """
      CREATE TABLE IF NOT EXISTS experiment_setup(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -305,6 +309,7 @@ def create_batch_table(connection):
          print('There is no connection to an SQL database. Please initiate it')
          return None
      
+     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
      query = """
      CREATE TABLE IF NOT EXISTS batch(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -345,6 +350,7 @@ def create_project_table(connection):
          print('There is no connection to an SQL database. Please initiate it')
          return None
      
+     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
      query = """
      CREATE TABLE IF NOT EXISTS project(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -379,6 +385,8 @@ def create_data_table(connection):
          print('There is no connection to an SQL database. Please initiate it')
          return None
      
+        
+     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")  
      query = """
      CREATE TABLE IF NOT EXISTS data(
          id INTEGER PRIMARY KEY AUTOINCREMENT,
