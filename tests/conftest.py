@@ -9,7 +9,7 @@ import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_update as tables_update
 
 
-@pytest.fixture
+@pytest.fixture(scope = 'session', autouse = True)
 def create_example_db():
     '''
     Fixture to create the exmaple db if it does not exists
@@ -18,8 +18,16 @@ def create_example_db():
     -------
     None
     '''
+    
+    
     path = os.path.join(os.path.dirname(__file__), 'data')
     name = 'database_test.sqlite'
+    
+    # if the database exists delete it 
+    
+    if os.path.exists(os.path.join(path, name)):
+        os.remove(os.path.join(path, name))
+    
     connection = database_utils.create_or_connect_db(path, name)
     
     # print('create the first university\n')
@@ -239,9 +247,9 @@ def create_example_db():
     # close the connection
     connection.close()
 
-# get the database name and path as a fixture
-@pytest.fixture
-def example_connection_path_name(create_example_db):
+#get the database name and path as a fixture
+@pytest.fixture()
+def example_connection_path_name():
     '''
     pytest fixture to get the path and name connection to the test database 
     situated in test/data/database_test.sqlite
@@ -251,15 +259,12 @@ def example_connection_path_name(create_example_db):
     '''
     path = os.path.join(os.path.dirname(__file__), 'data')
     name = 'database_test.sqlite'
-    
-    # if the database does not exist create it
-    if not os.path.exists(os.path.join(path, name)):
-        create_example_db()
-        
+
     return path, name
 
-@pytest.fixture
-def example_connection(create_example_db):
+#get the connection as a fixture 
+@pytest.fixture()
+def example_connection():
     '''
     Fixture to create a connection to the database test connection
 
@@ -270,10 +275,6 @@ def example_connection(create_example_db):
     '''
     path = os.path.join(os.path.dirname(__file__), 'data')
     name = 'database_test.sqlite'
-    
-    # if the database does not exist create it
-    if not os.path.exists(os.path.join(path, name)):
-        create_example_db()
    
     connection = database_utils.create_or_connect_db(path = path, name = name)
     return connection

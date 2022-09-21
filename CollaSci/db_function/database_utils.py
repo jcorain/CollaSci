@@ -127,10 +127,9 @@ def check_table_exists(connection, table_name):
        
     cur = connection.cursor()
     
-    check_table = cur.execute("SELECT name FROM sqlite_master WHERE type = 'table';")
-    res = check_table.fetchall()
+    res = cur.execute("SELECT name FROM sqlite_master WHERE type = 'table';").fetchall()
         
-    check_table.close()
+    cur.close()
     
     if (table_name,) in res:
         return True
@@ -139,7 +138,7 @@ def check_table_exists(connection, table_name):
     
 def delete_id_from_table(connection, table_name, id_num):
     '''
-    function to delete teh row with id id_num form a sql table
+    function to delete the row with id id_num form a sql table
 
     Parameters
     ----------
@@ -157,7 +156,7 @@ def delete_id_from_table(connection, table_name, id_num):
     '''
     cursor = connection.cursor()
     try:
-        cursor.execute('DELETE FROM {} WHERE id = {}'.format(table_name, id_num))
+        cursor.execute('DELETE FROM {} WHERE id = ?'.format(table_name), (id_num,))
         connection.commit()
         print("The row number {} has been successfully deleted from the {} table".format(id_num, table_name))
     except sqlite3.Error as e:

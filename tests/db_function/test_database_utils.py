@@ -106,6 +106,8 @@ class TestExecute_query():
         query = None
         with pytest.raises(TypeError) as error:
             database_utils.execute_query(connection = connection, query = query)
+        
+        connection.close()
         assert "argument 1 must be str, not None" in str(error)
         
     def test_execute_querry_wrong_query(self, example_connection, capsys):
@@ -121,7 +123,10 @@ class TestExecute_query():
         query = 'SELECT * FROM test'
         ret = database_utils.execute_query(connection = connection, query = query)
         
+            
         captured = capsys.readouterr()
+        
+        connection.close()        
         assert captured.out == "The error 'no such table: test' occurred\n"
         assert ret == False
         
@@ -137,7 +142,7 @@ class TestExecute_query():
         connection = example_connection
         query = 'SELECT * FROM user'
         ret = database_utils.execute_query(connection = connection, query = query)
-        
+        connection.close()
         captured = capsys.readouterr()
         assert captured.out == "Query executed successfully\n"
         assert ret == True
@@ -154,6 +159,7 @@ class TestExecute_query():
         connection = example_connection
         query = 'SELECT * FROM user'
         ret = database_utils.execute_query(connection = connection, query = query, values = (1,))
+        connection.close()
         
         captured = capsys.readouterr()
         
@@ -178,10 +184,13 @@ class TestExecute_query():
         """
         ret = database_utils.execute_query(connection = connection, query = query, values = ('test','test','test','test'))
         
+        
         captured = capsys.readouterr()
+        # delete the  last row
         
         database_utils.delete_id_from_table(connection, 'university', 3)
         
+        connection.close()
         assert captured.out == "Query executed successfully\n"
         assert ret == True
         
@@ -220,6 +229,7 @@ class TestFetchall_query():
         query = None
         with pytest.raises(TypeError) as error:
             database_utils.fetchall_query(connection = connection, query = query)
+        connection.close()
         assert "argument 1 must be str, not None" in str(error)
         
     def test_fetchall_querry_wrong_query(self, example_connection, capsys):
@@ -236,6 +246,9 @@ class TestFetchall_query():
         ret = database_utils.fetchall_query(connection = connection, query = query)
         
         captured = capsys.readouterr()
+        
+        connection.close()
+        
         assert captured.out == "The error 'no such table: test' occurred\n"
         assert ret == None
         
@@ -253,6 +266,9 @@ class TestFetchall_query():
         ret = database_utils.fetchall_query(connection = connection, query = query)
         
         captured = capsys.readouterr()
+        
+        connection.close()
+        
         assert captured.out == "Query fetched successfully\n"
         assert ret ==  [(1, 'Jean-Christophe', 'Orain', 1, 1),
                         (2, 'Jean-Christophe', 'Orain', 2, 3), 
@@ -288,6 +304,9 @@ class TestCheck_table_exists():
         
         ret = database_utils.check_table_exists(connection = connection, table_name = table_name)
         captured = capsys.readouterr()
+        
+        connection.close()
+        
         assert captured.out == 'There is no table name. Please provide it.\n'
         assert ret == None
 
@@ -304,6 +323,9 @@ class TestCheck_table_exists():
         table_name = 'test'
         
         ret = database_utils.check_table_exists(connection = connection, table_name = table_name)
+        
+        connection.close()
+        
         assert ret == False
 
     def test_check_tabl_exists(self,example_connection):
@@ -319,6 +341,8 @@ class TestCheck_table_exists():
         table_name = 'user'
         
         ret = database_utils.check_table_exists(connection = connection, table_name = table_name)
+        
+        connection.close()
         assert ret == True
 
 class TestDelete_id_from_table():
@@ -339,6 +363,9 @@ class TestDelete_id_from_table():
         id_num = 1
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
         captured = capsys.readouterr()
+        
+        connection.close()
+        
         assert captured.out == "The error 'no such table: None' occurred\n"
 
     def test_delete_id_from_table_wrong_table_name(self, example_connection, capsys):
@@ -347,6 +374,9 @@ class TestDelete_id_from_table():
         id_num = 1
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
         captured = capsys.readouterr()
+       
+        connection.close()
+        
         assert captured.out == "The error 'no such table: test' occurred\n"
         
     def test_delete_id_from_table_no_id_num(self, example_connection, capsys):
@@ -355,8 +385,12 @@ class TestDelete_id_from_table():
         id_num = None
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
         captured = capsys.readouterr()
-        assert captured.out == "The error 'no such column: None' occurred\n"
-
+        universities = database_utils.fetchall_query(connection, "SELECT name FROM university;")
+        connection.close()
+       
+        assert "The row number None has been successfully deleted from the university table" in captured.out
+        assert sorted(universities) == sorted([('Université Paris Saclay',), 
+                                              ('Paul Scherrer Institute',)])
     def test_delete_id_from_table_wrong_id_num(self, example_connection, capsys):
         connection = example_connection
         table_name = 'university'
@@ -365,13 +399,14 @@ class TestDelete_id_from_table():
         
         captured = capsys.readouterr()
         
-        
         universities = database_utils.fetchall_query(connection, "SELECT name FROM university;")
         user = database_utils.fetchall_query(connection, "SELECT firstname FROM user;")
+        
+        connection.close()
                       
         assert "The row number 10 has been successfully deleted from the university table" in captured.out
         assert sorted(universities) == sorted([('Université Paris Saclay',), 
-                                               ('Paul Scherrer Institute',)])
+                                                ('Paul Scherrer Institute',)])
         assert user == [('Jean-Christophe',), 
                         ('Jean-Christophe',), 
                         ('Gediminas',)]
@@ -379,7 +414,7 @@ class TestDelete_id_from_table():
     def test_delete_id_from_table(self, example_connection, capsys):
         connection = example_connection
         table_name = 'university'
-        id_num = 2
+        id_num = 1
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
         
         captured = capsys.readouterr()
@@ -387,15 +422,14 @@ class TestDelete_id_from_table():
         
         # check the users and universities names 
         universities = database_utils.fetchall_query(connection, "SELECT name FROM university;")
-#   user = database_utils.fetchall_query(connection, "SELECT * FROM laboratory;")
+        user = database_utils.fetchall_query(connection, "SELECT * FROM user;")
+        
+        connection.close()
 
-        # delete full university table
         
-        database_utils.execute_query(connection, "DROP TABLE university;")
+        assert "The row number 1 has been successfully deleted from the university table" in captured.out
+        assert universities == [('Paul Scherrer Institute',)]
         
- 
-        assert "The row number 2 has been successfully deleted from the university table" in captured.out
-        assert universities == [('Université Paris Saclay',)]
         
         
         
