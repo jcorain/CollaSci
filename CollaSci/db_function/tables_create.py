@@ -3,6 +3,10 @@ module where the different tables are created
 '''
 import CollaSci.db_function.database_utils as database_utils
 
+# from . import database_utils as 
+
+# import database_utils
+
 def create_university_table(connection):
     """
     Function to create university table

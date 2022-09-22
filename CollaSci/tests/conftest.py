@@ -9,6 +9,7 @@ import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_update as tables_update
 
 
+
 @pytest.fixture(scope = 'session', autouse = True)
 def create_example_db():
     '''

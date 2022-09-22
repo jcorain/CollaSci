@@ -1,9 +1,13 @@
+'''
+test module for tables_create module
+'''
+
 import pytest
 
 import CollaSci.db_function.tables_create as tables_create
 import CollaSci.db_function.database_utils as database_utils
 
-# cretae an empty connection with foreign_keys on 
+# create an empty connection with foreign_keys on 
 
 @pytest.fixture()
 def empty_db(tmp_path):
@@ -13,13 +17,14 @@ def empty_db(tmp_path):
     Returns
     -------
     None
-    '''
-    
-    
+    '''   
 
 class TestCreate_university_table():
+    '''
+    Class to test the create_university_table function
+    '''
     def test_create_university_table_no_connection(self, capsys):
-        
+ 
         connection = None
         tables_create.create_university_table(connection)
         captured = capsys.readouterr()
@@ -34,8 +39,7 @@ class TestCreate_university_table():
 
         # create the table 
         tables_create.create_university_table(connection)
-        
-        
+             
         ret_uni = database_utils.check_table_exists(connection, 'university')
         ret_user = database_utils.check_table_exists(connection, 'user')
         connection.close()
@@ -44,6 +48,9 @@ class TestCreate_university_table():
         assert ret_user == False
         
 class TestCreate_laboratory_table():
+    '''
+    Class to test the create_laboratory_table function
+    '''
     def test_create_laboratory_table_no_connection(self, capsys):
         connection = None
         tables_create.create_laboratory_table(connection)
@@ -65,12 +72,13 @@ class TestCreate_laboratory_table():
 
         connection.close()
         
-        
-        
         assert ret_labo == True
         assert ret_user == False
         
 class TestCreate_status_table():
+    '''
+    Class to test the create_status_table function
+    '''
     def test_create_status_table_no_connection(self, capsys):
         connection = None
         tables_create.create_status_table(connection)
@@ -92,13 +100,14 @@ class TestCreate_status_table():
 
         connection.close()
         
-        
-        
         assert ret_status == True
         assert ret_user == False
 
 
 class TestCreate_material_type_table():
+    '''
+    Class to test the create_material_type_table function
+    '''
     def test_create_material_type_table_no_connection(self, capsys):
         connection = None
         tables_create.create_material_type_table(connection)
@@ -120,12 +129,13 @@ class TestCreate_material_type_table():
 
         connection.close()
         
-        
-        
         assert ret_material_type == True
         assert ret_user == False
 
 class TestCreate_compound_table():
+    '''
+    Class to test the create_compound_table function
+    '''
     def test_create_compound_table_no_connection(self, capsys):
         connection = None
         tables_create.create_compound_table(connection)
@@ -172,12 +182,13 @@ class TestCreate_experiment_type_table():
 
         connection.close()
         
-        
-        
         assert ret_experiment_type == True
         assert ret_user == False
 
 class TestCreate_user_table():
+    '''
+    Class to test the create_user_table function
+    '''
     def test_create_user_table_no_connection(self, capsys):
         connection = None
         tables_create.create_user_table(connection)
@@ -199,12 +210,13 @@ class TestCreate_user_table():
 
         connection.close()
         
-        
-        
         assert ret_user == True
         assert ret_labo == False
 
 class TestCreate_experiment_setup_table():
+    '''
+    Class to test the create_experiment_setup_table function
+    '''
     def test_create_experiment_setup_table_no_connection(self, capsys):
         connection = None
         tables_create.create_experiment_setup_table(connection)
@@ -226,12 +238,13 @@ class TestCreate_experiment_setup_table():
 
         connection.close()
         
-        
-        
         assert ret_experiment_setup == True
         assert ret_user == False
 
 class TestCreate_batch_table():
+    '''
+    Class to test the create_batch_table function
+    '''
     def test_create_batch_table_no_connection(self, capsys):
         connection = None
         tables_create.create_batch_table(connection)
@@ -253,12 +266,13 @@ class TestCreate_batch_table():
 
         connection.close()
         
-        
-        
         assert ret_batch == True
         assert ret_user == False
 
 class TestCreate_project_table():
+    '''
+    Class to test the create_project_table function
+    '''
     def test_create_project_table_no_connection(self, capsys):
         connection = None
         tables_create.create_project_table(connection)
@@ -280,12 +294,13 @@ class TestCreate_project_table():
 
         connection.close()
         
-        
-        
         assert ret_project == True
         assert ret_user == False
 
 class TestCreate_data_table():
+    '''
+    Class to test the create_data_table function
+    '''
     def test_create_data_table_no_connection(self, capsys):
         connection = None
         tables_create.create_data_table(connection)
@@ -306,8 +321,6 @@ class TestCreate_data_table():
         ret_user = database_utils.check_table_exists(connection, 'user')
 
         connection.close()
-        
-        
         
         assert ret_data == True
         assert ret_user == False

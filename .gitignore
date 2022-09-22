@@ -7,3 +7,6 @@ buid\
 ~*
 htmlcov/
 htmlcov\
+.coverage
+/*.egg-info
+\*.egg-info

@@ -2,8 +2,13 @@
 module to change tables 
 """
 
+# import CollaSci
+
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_create as tables_create
+
+# import database_utils
+# import tables_create
 
 import os
 import shutil
@@ -1009,9 +1014,15 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
         
 if __name__ == '__main__':
     
-    print('\nCreate connection to the database\n')
-    
     connection = database_utils.create_or_connect_db()
+    
+    print('\ncreate the first laboratory\n') 
+    
+    laboratory_name = 'Laboratoire de Physique des Solides'
+    university_id = 1
+    add_row_laboratory_table(laboratory_name, university_id, connection)
+    
+    print('\nCreate connection to the database\n')
     
     print('create the first university\n')
     
