@@ -30,6 +30,8 @@ def create_example_db():
     
     connection = database_utils.create_or_connect_db(path, name)
     
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
+    
     # print('create the first university\n')
     
     university_name = 'Université Paris Saclay'
@@ -246,7 +248,7 @@ def create_example_db():
     
     # close the connection
     connection.close()
-
+        
 #get the database name and path as a fixture
 @pytest.fixture()
 def example_connection_path_name():

@@ -30,6 +30,11 @@ def create_or_connect_db(path = os.path.dirname(os.path.dirname(os.path.dirname(
     try:
         connection = sqlite3.connect(database_path)
         print('Connection to SQLite DB {} succesfull'.format(database_path))
+        
+        # set foreign keys on 
+        
+        execute_query(connection, "PRAGMA foreign_keys = ON;")
+        
     except sqlite3.Error as e:
         print('The error {} occured'.format(e))
         connection = None

@@ -124,7 +124,7 @@ def add_row_laboratory_table(name, university_id, connection):
     
     # set the foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # check if the laboratory table exists 
     
@@ -318,7 +318,7 @@ def add_row_compound_table(name, formula, material_type_id, connection):
     
     # set teh foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # check if the laboratory table exists 
     
@@ -460,7 +460,7 @@ def add_row_user_table(firstname, lastname, status_id, laboratory_id, connection
     
     # set teh foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # check if the laboratory table exists 
     
@@ -572,7 +572,7 @@ def add_row_experiment_setup_table(name, room_name, start_date, min_field, max_f
     
     # set teh foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # check if the laboratory table exists 
     
@@ -683,7 +683,7 @@ def add_row_batch_table(name, mass, color, Type, creation_date, compound_id, gro
     
     # set teh foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # check if the laboratory table exists 
     
@@ -756,7 +756,7 @@ def add_row_project_table(name, responsible_id, connection):
     
     # set teh foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # check if the laboratory table exists 
     
@@ -872,7 +872,7 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
     
     # set teh foreign keys on 
     
-    connection.execute("PRAGMA foreign_keys = ON;")
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
     # create the pathname of the experimental setup and check that it does not exists  
     # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name

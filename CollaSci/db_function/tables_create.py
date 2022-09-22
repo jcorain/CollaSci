@@ -18,7 +18,6 @@ def create_university_table(connection):
 
     """
     # check connection 
-    
     if connection is None:
         print('There is no connection to an SQL database. Please initiate it')
         return None
@@ -66,7 +65,7 @@ def create_laboratory_table(connection):
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         university_id INT NOT NULL,
-        FOREIGN KEY(university_id) REFERENCES university(id) ON UPDATE CASCADE ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+        FOREIGN KEY(university_id) REFERENCES university(id) ON UPDATE CASCADE ON DELETE CASCADE
         );
     """
     
