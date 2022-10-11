@@ -10,7 +10,7 @@ import CollaSci.db_function.tables_update as tables_update
 
 
 
-@pytest.fixture(scope = 'session', autouse = True)
+@pytest.fixture()
 def create_example_db():
     '''
     Fixture to create the exmaple db if it does not exists
@@ -247,8 +247,49 @@ def create_example_db():
     tables_update.add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
     
-    # close the connection
-    connection.close()
+    return connection
+    
+@pytest.fixture()
+def create_example_db_university():
+    '''
+    Fixture to create the example db with only universitxy table
+    
+    Returns
+    -------
+    None
+    '''
+    
+    
+    path = os.path.join(os.path.dirname(__file__), 'data')
+    name = 'database_test.sqlite'
+    
+    # if the database exists delete it 
+    
+    if os.path.exists(os.path.join(path, name)):
+        os.remove(os.path.join(path, name))
+    
+    connection = database_utils.create_or_connect_db(path, name)
+    
+    database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
+    
+    # print('create the first university\n')
+    
+    university_name = 'Université Paris Saclay'
+    university_country = 'France'
+    university_city = 'Gif-sur-Yvette'
+    university_address = 'Bâtiment Bréguet, 3 Rue Joliot Curie 2e ét, 91190 Gif-sur-Yvette, France'
+    tables_update.add_row_university_table(university_name, university_country, university_city, university_address, connection)
+    
+    # print('\ncreate the second university\n')
+    
+    university_name = 'Paul Scherrer Institute'
+    university_country = "Switzerland"
+    university_city = 'Villigen'
+    university_address = 'PSI CH, Forschungsstrasse 111, 5232 Villigen'
+    tables_update.add_row_university_table(university_name, university_country, university_city, university_address, connection)
+    
+    return connection
+
         
 #get the database name and path as a fixture
 @pytest.fixture()
@@ -265,19 +306,19 @@ def example_connection_path_name():
 
     return path, name
 
-#get the connection as a fixture 
-@pytest.fixture()
-def example_connection():
-    '''
-    Fixture to create a connection to the database test connection
+# #get the connection as a fixture 
+# @pytest.fixture()
+# def example_connection():
+#     '''
+#     Fixture to create a connection to the database test connection
 
-    Returns
-    -------
-    SQLITE connection.
+#     Returns
+#     -------
+#     SQLITE connection.
 
-    '''
-    path = os.path.join(os.path.dirname(__file__), 'data')
-    name = 'database_test.sqlite'
+#     '''
+#     path = os.path.join(os.path.dirname(__file__), 'data')
+#     name = 'database_test.sqlite'
    
-    connection = database_utils.create_or_connect_db(path = path, name = name)
-    return connection
+#     connection = database_utils.create_or_connect_db(path = path, name = name)
+#     return connection

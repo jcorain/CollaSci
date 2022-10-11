@@ -196,7 +196,7 @@ def add_row_status_table(name, connection):
     
     if res == False:
         tables_create.create_status_table(connection)
-        print('The staus table has been created.')
+        print('The status table has been created.')
     
     # if the table exists check that the values you want to add are new 
     
@@ -1014,95 +1014,9 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
         
 if __name__ == '__main__':
     
-    connection = database_utils.create_or_connect_db()
-    
-    print('\ncreate the first laboratory\n') 
-    
-    laboratory_name = 'Laboratoire de Physique des Solides'
-    university_id = 1
-    add_row_laboratory_table(laboratory_name, university_id, connection)
-    
     print('\nCreate connection to the database\n')
     
-    print('create the first university\n')
-    
-    university_name = 'Université Paris Saclay'
-    university_country = 'France'
-    university_city = 'Gif-sur-Yvette'
-    university_address = 'Bâtiment Bréguet, 3 Rue Joliot Curie 2e ét, 91190 Gif-sur-Yvette, France'
-    add_row_university_table(university_name, university_country, university_city, university_address, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n') 
-    
-    add_row_university_table(university_name, university_country, university_city, university_address, connection)
-    
-    print('\ncreate the second university\n')
-    
-    university_name = 'Paul Scherrer Institute'
-    university_country = "Switzerland"
-    university_city = 'Villigen'
-    university_address = 'PSI CH, Forschungsstrasse 111, 5232 Villigen'
-    add_row_university_table(university_name, university_country, university_city, university_address, connection)
-    
-    
-    print('\ncheck university table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM university;").fetchall())
-    cur.close()
-    
-    print('\ncreate the first laboratory\n') 
-    
-    laboratory_name = 'Laboratoire de Physique des Solides'
-    university_id = 1
-    add_row_laboratory_table(laboratory_name, university_id, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n') 
-    
-    add_row_laboratory_table(laboratory_name, university_id, connection)
-    
-    print('\ncreate the second laboratory\n')
-    
-    laboratory_name = 'Laboratoire de Physique Théoriques et de Modèles Statistiques'
-    university_id = 1
-    add_row_laboratory_table(laboratory_name, university_id, connection)
-    
-    print('\ncreate the third laboratory\n') 
-    
-    laboratory_name = 'Laboratory for Muon Spin Spectroscopy'
-    university_id = 2
-    add_row_laboratory_table(laboratory_name, university_id, connection)
-    
-    print('\ncheck what happens when the university does not exist\n') 
-
-    laboratory_name = 'Laboratoire test'
-    university_id = 3
-    add_row_laboratory_table(laboratory_name, university_id, connection)
-    
-    print('\ncheck laboratory table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM laboratory;").fetchall())
-    cur.close()
-    
-    print('\ncreate the first status\n')
-    
-    status_name = 'PhD Student'
-    add_row_status_table(status_name, connection)
-    
-    print('\ncreate the second status\n')
-    
-    status_name = 'Postdoc'
-    add_row_status_table(status_name, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_status_table(status_name, connection)
-    
-    print('\ncheck status table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM status;").fetchall())
-    cur.close()
+    connection = database_utils.create_or_connect_db()
     
     print('\ncreate the first material type\n')
     

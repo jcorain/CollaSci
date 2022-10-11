@@ -93,7 +93,7 @@ class TestExecute_query():
         assert "'NoneType' object has no attribute 'cursor'" in str(error)
         
         
-    def test_execute_querry_no_query(self, example_connection):
+    def test_execute_querry_no_query(self, create_example_db):
         '''
         Function to test the execution when no query is provided
 
@@ -102,7 +102,7 @@ class TestExecute_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = None
         with pytest.raises(TypeError) as error:
             database_utils.execute_query(connection = connection, query = query)
@@ -110,7 +110,7 @@ class TestExecute_query():
         connection.close()
         assert "argument 1 must be str, not None" in str(error)
         
-    def test_execute_querry_wrong_query(self, example_connection, capsys):
+    def test_execute_querry_wrong_query(self, create_example_db, capsys):
         '''
         Function to test the execution when wrong query is provided
 
@@ -119,7 +119,7 @@ class TestExecute_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = 'SELECT * FROM test'
         ret = database_utils.execute_query(connection = connection, query = query)
         
@@ -127,10 +127,10 @@ class TestExecute_query():
         captured = capsys.readouterr()
         
         connection.close()        
-        assert captured.out == "The error 'no such table: test' occurred\n"
+        assert "The error 'no such table: test' occurred" in captured.out
         assert ret == False
         
-    def test_execute_querry(self, example_connection, capsys):
+    def test_execute_querry(self, create_example_db, capsys):
         '''
         Function to test the good execution without values
 
@@ -139,7 +139,7 @@ class TestExecute_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = 'SELECT * FROM user'
         ret = database_utils.execute_query(connection = connection, query = query)
         connection.close()
@@ -147,7 +147,7 @@ class TestExecute_query():
         assert captured.out == "Query executed successfully\n"
         assert ret == True
         
-    def test_execute_querry_wrong_values(self, example_connection, capsys):
+    def test_execute_querry_wrong_values(self, create_example_db, capsys):
         '''
         Function to test the execution when wrong values is provided
 
@@ -156,7 +156,7 @@ class TestExecute_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = 'SELECT * FROM user'
         ret = database_utils.execute_query(connection = connection, query = query, values = (1,))
         connection.close()
@@ -166,7 +166,7 @@ class TestExecute_query():
         assert captured.out == "The error 'Incorrect number of bindings supplied. The current statement uses 0, and there are 1 supplied.' occurred\n"
         assert ret == False
 
-    def test_execute_querry_good_values(self, example_connection, capsys):
+    def test_execute_querry_good_values(self, create_example_db, capsys):
         '''
         Function to test the execution with values
 
@@ -175,7 +175,7 @@ class TestExecute_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = """
         INSERT INTO 
             university(name, country, city, address)
@@ -216,7 +216,7 @@ class TestFetchall_query():
         assert "'NoneType' object has no attribute 'cursor'" in str(error)
         
         
-    def test_fetchall_querry_no_query(self, example_connection):
+    def test_fetchall_querry_no_query(self, create_example_db):
         '''
         Function to test the fetchall when no query is provided
 
@@ -225,14 +225,14 @@ class TestFetchall_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = None
         with pytest.raises(TypeError) as error:
             database_utils.fetchall_query(connection = connection, query = query)
         connection.close()
         assert "argument 1 must be str, not None" in str(error)
         
-    def test_fetchall_querry_wrong_query(self, example_connection, capsys):
+    def test_fetchall_querry_wrong_query(self, create_example_db, capsys):
         '''
         Function to test the fetchall when wrong querry is provided
 
@@ -241,7 +241,7 @@ class TestFetchall_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = 'SELECT * FROM test'
         ret = database_utils.fetchall_query(connection = connection, query = query)
         
@@ -252,7 +252,7 @@ class TestFetchall_query():
         assert captured.out == "The error 'no such table: test' occurred\n"
         assert ret == None
         
-    def test_fetchall_querry(self, example_connection, capsys):
+    def test_fetchall_querry(self, create_example_db, capsys):
         '''
         Function to test the good fetchall
 
@@ -261,7 +261,7 @@ class TestFetchall_query():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         query = 'SELECT * FROM user'
         ret = database_utils.fetchall_query(connection = connection, query = query)
         
@@ -290,7 +290,7 @@ class TestCheck_table_exists():
             database_utils.check_table_exists(connection = connection, table_name = table_name)
         assert "'NoneType' object has no attribute 'cursor'" in str(error)
     
-    def test_check_tabl_exists_no_table_name(self,example_connection, capsys):
+    def test_check_tabl_exists_no_table_name(self,create_example_db, capsys):
         '''
         Function to check table_exists function when there is no connection 
 
@@ -299,7 +299,7 @@ class TestCheck_table_exists():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         table_name = None
         
         ret = database_utils.check_table_exists(connection = connection, table_name = table_name)
@@ -310,7 +310,7 @@ class TestCheck_table_exists():
         assert captured.out == 'There is no table name. Please provide it.\n'
         assert ret == None
 
-    def test_check_tabl_exists_wrong_table_name(self,example_connection):
+    def test_check_tabl_exists_wrong_table_name(self,create_example_db):
         '''
         Function to check table_exists function when there is no connection 
 
@@ -319,7 +319,7 @@ class TestCheck_table_exists():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         table_name = 'test'
         
         ret = database_utils.check_table_exists(connection = connection, table_name = table_name)
@@ -328,7 +328,7 @@ class TestCheck_table_exists():
         
         assert ret == False
 
-    def test_check_tabl_exists(self,example_connection):
+    def test_check_tabl_exists(self,create_example_db):
         '''
         Function to check table_exists function when there is no connection 
 
@@ -337,7 +337,7 @@ class TestCheck_table_exists():
         None.
 
         '''
-        connection = example_connection
+        connection = create_example_db
         table_name = 'user'
         
         ret = database_utils.check_table_exists(connection = connection, table_name = table_name)
@@ -357,8 +357,8 @@ class TestDelete_id_from_table():
             database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
         assert "'NoneType' object has no attribute 'cursor'" in str(error)
         
-    def test_delete_id_from_table_no_table_name(self, example_connection, capsys):
-        connection = example_connection
+    def test_delete_id_from_table_no_table_name(self, create_example_db, capsys):
+        connection = create_example_db
         table_name = None
         id_num = 1
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
@@ -368,8 +368,8 @@ class TestDelete_id_from_table():
         
         assert captured.out == "The error 'no such table: None' occurred\n"
 
-    def test_delete_id_from_table_wrong_table_name(self, example_connection, capsys):
-        connection = example_connection
+    def test_delete_id_from_table_wrong_table_name(self, create_example_db, capsys):
+        connection = create_example_db
         table_name = 'test'
         id_num = 1
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
@@ -379,8 +379,8 @@ class TestDelete_id_from_table():
         
         assert captured.out == "The error 'no such table: test' occurred\n"
         
-    def test_delete_id_from_table_no_id_num(self, example_connection, capsys):
-        connection = example_connection
+    def test_delete_id_from_table_no_id_num(self, create_example_db, capsys):
+        connection = create_example_db
         table_name = 'university'
         id_num = None
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
@@ -391,8 +391,8 @@ class TestDelete_id_from_table():
         assert "The row number None has been successfully deleted from the university table" in captured.out
         assert sorted(universities) == sorted([('Université Paris Saclay',), 
                                               ('Paul Scherrer Institute',)])
-    def test_delete_id_from_table_wrong_id_num(self, example_connection, capsys):
-        connection = example_connection
+    def test_delete_id_from_table_wrong_id_num(self, create_example_db, capsys):
+        connection = create_example_db
         table_name = 'university'
         id_num = 10
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
@@ -411,8 +411,8 @@ class TestDelete_id_from_table():
                         ('Jean-Christophe',), 
                         ('Gediminas',)]
 
-    def test_delete_id_from_table(self, example_connection, capsys):
-        connection = example_connection
+    def test_delete_id_from_table(self, create_example_db, capsys):
+        connection = create_example_db
         table_name = 'university'
         id_num = 1
         database_utils.delete_id_from_table(connection = connection, table_name = table_name, id_num = id_num)
