@@ -2,8 +2,6 @@
 test module for tables_create module
 '''
 
-import pytest
-
 import CollaSci.db_function.tables_create as tables_create
 import CollaSci.db_function.database_utils as database_utils
 

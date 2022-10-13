@@ -321,7 +321,7 @@ def add_row_compound_table(name, formula, material_type_id, connection):
         print('There is no connection to an SQL database. Please initiate it')
         return None
     
-    # set teh foreign keys on 
+    # set the foreign keys on 
     
     database_utils.execute_query(connection, "PRAGMA foreign_keys = ON;")
     
@@ -585,7 +585,7 @@ def add_row_experiment_setup_table(name, room_name, start_date, min_field, max_f
     
     if res == False:
         tables_create.create_experiment_setup_table(connection)
-        print('The experiment setup table has been created.')
+        print('The experiment_setup table has been created.')
     
     # if the table exists check that the values you want to add are new 
     
@@ -1018,254 +1018,6 @@ if __name__ == '__main__':
     
     connection = database_utils.create_or_connect_db()
     
-    print('\ncreate the first material type\n')
-    
-    material_type_name = 'Quantum Spin Liquid'
-    add_row_material_type_table(material_type_name, connection)
-    
-    print('\ncreate the second material type\n')
-    
-    material_type_name = 'Superconductor'
-    add_row_material_type_table(material_type_name, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_material_type_table(material_type_name, connection)
-    
-    print('\ncheck material_type table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM material_type;").fetchall())
-    cur.close()
-    
-    print('\ncreate the first compound\n')
-    
-    compound_name = 'DQVOF'
-    compound_formula = '(NH4)2[C7H14N][V7O6F18]'
-    material_type_id = 1
-    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
-    
-    print('\ncreate the second compound\n')
-    
-    compound_name = 'Herbertsmithite'
-    compound_formula = 'ZnCu3(OH)6Cl2'
-    material_type_id = 1
-    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
-     
-    print('\ncreate the third compound\n')
-    
-    compound_name = 'YBACUO'
-    compound_formula = 'YBa2Cu3O7'
-    material_type_id = 2
-    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
-    
-    print('Test compound without material type')
-    compound_name = 'test'
-    compound_formula = 'test'
-    material_type_id = 3
-    add_row_compound_table(compound_name, compound_formula, material_type_id, connection)
-    
-    print('\ncheck compound table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM compound;").fetchall())
-    cur.close()
-    
-    print('\ncreate the first experiement type\n')
-    
-    experiment_type_name = 'Heat Capacity vs Temperature'
-    add_row_experiment_type_table(experiment_type_name, connection)
-    
-    print('\ncreate the second experiement type\n')
-    
-    experiment_type_name = 'Magnetization vs Temperature'
-    add_row_experiment_type_table(experiment_type_name, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_experiment_type_table(experiment_type_name, connection)
-    
-    print('\ncheck experiment_type table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM experiment_type;").fetchall())
-    cur.close()
-    
-    print('\ncreate the first user\n')
-    
-    user_firstname = 'Jean-Christophe'
-    user_lastname = 'Orain'
-    status_id = 1
-    laboratory_id = 1
-    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
-    
-    print('\ncreate the second user\n')
-    
-    user_firstname = 'Jean-Christophe'
-    user_lastname = 'Orain'
-    status_id = 2
-    laboratory_id = 3
-    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
-    
-    print('\ncreate the third user\n')
-    
-    user_firstname = 'Gediminas'
-    user_lastname = 'Simutis'
-    status_id = 2
-    laboratory_id = 3
-    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
-    
-    print('\nTest user without status id.\n')
-    user_firstname = 'Jean-Christophe'
-    user_lastname = 'Orain'
-    status_id = 3
-    laboratory_id = 2
-    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
-    
-    print('\nTest user without laboratory id.\n')
-    user_firstname = 'Jean-Christophe'
-    user_lastname = 'Orain'
-    status_id = 2
-    laboratory_id = 4
-    add_row_user_table(user_firstname, user_lastname, status_id, laboratory_id, connection)
-    
-    print('\ncheck user table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM user;").fetchall())
-    cur.close()
-
-    print('\ncreate the first experimental setup\n')
-    
-    experimental_setup_name = 'MMPS He4'
-    roomname = 'Salon'
-    experimental_setup_start_date = '25/05/2018'
-    min_field = 0
-    max_field = 5
-    min_temperature = 1.5
-    max_temperature = 300
-    experiment_type_id = 1
-    responsible_id = 1
-    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
-                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
-    
-    print('\ncreate the second experimental setup\n')
-    
-    experimental_setup_name = 'MMPS He4 bis'
-    roomname = 'Salon'
-    experimental_setup_start_date = '25/05/2018'
-    min_field = None
-    max_field = None
-    min_temperature = None
-    max_temperature = None
-    experiment_type_id = 1
-    responsible_id = 2
-    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
-                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
-                                max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
-    
-    print("\nTest wrong experiment type for experiment setup\n")
-    
-    experimental_setup_name = 'MMPS with wrong experiement type'
-    roomname = 'Salon'
-    experimental_setup_start_date = '25/05/2018'
-    min_field = None
-    max_field = None
-    min_temperature = None
-    max_temperature = None
-    experiment_type_id = 5
-    responsible_id = 2
-    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
-                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
-    
-    print("\nTest wrong responsible type for experiment setup\n")
-    
-    experimental_setup_name = 'MMPS with wrong responsible'
-    roomname = 'Salon'
-    experimental_setup_start_date = '25/05/2018'
-    min_field = None
-    max_field = None
-    min_temperature = None
-    max_temperature = None
-    experiment_type_id = 1
-    responsible_id = 6
-    add_row_experiment_setup_table(experimental_setup_name, roomname, experimental_setup_start_date, min_field, 
-                                    max_field, min_temperature, max_temperature, experiment_type_id, responsible_id, connection)
-    
-    print('\ncheck experiment setup table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
-    cur.close()
-    
-    print('\nCreate the first batch')
-    batch_name = "DQVOF 1"
-    mass = 100
-    color = 'green'
-    Type = "powder"
-    creation_date = '2019-10-12'
-    compound_id = 1
-    grower_id = 1
-    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
-    
-    
-    print('\nCreate the second batch')
-    batch_name = "Test 2002"
-    mass = 200
-    color = 'green'
-    Type = "single cristal"
-    creation_date = '2017-10-12'
-    compound_id = 2
-    grower_id = 3
-    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
-    
-    print('\nCheck wrong batch type\n')
-    
-    batch_name = "Test wrong batch type"
-    mass = 200
-    color = 'green'
-    Type = "test"
-    creation_date = '2017-10-12'
-    compound_id = 2
-    grower_id = 3
-    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
-    
-    print('\nCheck worng compound.')
-    batch_name = "Test wrong compound"
-    mass = 200
-    color = 'green'
-    Type = "single cristal"
-    creation_date = '2017-10-12'
-    compound_id = 5
-    grower_id = 3
-    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
-    
-    print('\nCheck wrong grower.')
-    batch_name = "Test wrong grower"
-    mass = 200
-    color = 'green'
-    Type = "single cristal"
-    creation_date = '2017-10-12'
-    compound_id = 2
-    grower_id = 6
-    add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
-    
-    print('\ncheck batch table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM batch;").fetchall())
-    cur.close()
-    
     print('\nCreate the first project\n')
     project_name = "Super project"
     project_responsible_id = 1
@@ -1421,29 +1173,7 @@ if __name__ == '__main__':
     print(cur.execute("SELECT * FROM batch;").fetchall())
     print(cur.execute("SELECT * FROM project;").fetchall())
     print(cur.execute("SELECT * FROM data;").fetchall())
-    cur.close()
-    
-    # print('\nCheck delete row for university\n')
-    
-    database_utils.delete_id_from_table(connection, 'university', 1)
-   
-    
-   
-    print('\ncheck all the tables values\n')
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM university;").fetchall())
-    print(cur.execute("SELECT * FROM laboratory;").fetchall())
-    print(cur.execute("SELECT * FROM status;").fetchall())
-    print(cur.execute("SELECT * FROM material_type;").fetchall())
-    print(cur.execute("SELECT * FROM compound;").fetchall())
-    print(cur.execute("SELECT * FROM experiment_type;").fetchall())
-    print(cur.execute("SELECT * FROM user;").fetchall())
-    print(cur.execute("SELECT * FROM experiment_setup;").fetchall())
-    print(cur.execute("SELECT * FROM batch;").fetchall())
-    print(cur.execute("SELECT * FROM project;").fetchall())
-    print(cur.execute("SELECT * FROM data;").fetchall())
-    cur.close()
-    
+    cur.close()   
     
     # close the connection
     connection.close()
