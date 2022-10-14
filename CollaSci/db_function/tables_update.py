@@ -1018,32 +1018,6 @@ if __name__ == '__main__':
     
     connection = database_utils.create_or_connect_db()
     
-    print('\nCreate the first project\n')
-    project_name = "Super project"
-    project_responsible_id = 1
-    add_row_project_table(project_name, project_responsible_id, connection)
-    
-    print('\nCreate the second project\n')
-    project_name = "Super other project"
-    project_responsible_id = 3
-    add_row_project_table(project_name, project_responsible_id, connection)
-    
-    print('\ncheck what happens if we recreate the entry\n')
-    
-    add_row_project_table(project_name, project_responsible_id, connection)
-    
-    print("\nCheck wrong responsible id\n")
-    
-    project_name = "test wrong responsible"
-    project_responsible_id = 7
-    add_row_project_table(project_name, project_responsible_id, connection)
-    
-    print('\ncheck project table values\n')
-    
-    cur = connection.cursor()
-    print(cur.execute("SELECT * FROM project;").fetchall())
-    cur.close()
-    
     print('\nCreate the first data\n')
     
     mass = 100

@@ -390,7 +390,6 @@ class TestAdd_row_laboratory_table():
         assert "The error 'FOREIGN KEY constraint failed' occurred" in captured.out
         assert existing_values == []
         
-        
 class TestAdd_row_status_table():
     '''
     Class to test the add row function for the status table 
@@ -2299,3 +2298,195 @@ class TestAdd_row_batch_table():
                                     '2017-10-12',
                                     2,
                                     3)] 
+        
+class TestAdd_row_project_table():
+    '''
+    Class to test the add row function for the project table 
+    '''
+    def test_add_row_project_no_connection(self, capsys):
+        '''
+        function to test the behavior of the function when there is no connection 
+        '''
+        name = "Super project"
+        project_responsible_id = 1
+        connection = None
+        
+        res = tables_update.add_row_project_table(name, 
+                                                  project_responsible_id, 
+                                                  connection)
+        
+        captured = capsys.readouterr()
+        
+        assert 'There is no connection to an SQL database. Please initiate it' in captured.out
+        
+        assert res == None
+        
+    def test_add_row_project_no_name(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no name 
+        '''
+        # create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+        name = None
+        project_responsible_id = 1
+        
+        res = tables_update.add_row_project_table(name, 
+                                                  project_responsible_id, 
+                                                  connection)
+        
+        captured = capsys.readouterr()
+        
+        assert 'There is no project name. Please provide it' in captured.out
+        
+        assert res == None
+    
+    def test_add_row_project_no_project_responsible_id(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no responsible_id 
+        '''
+        # create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+        name = "Super project"
+        project_responsible_id = None
+        
+        res = tables_update.add_row_project_table(name, 
+                                                  project_responsible_id, 
+                                                  connection)
+        
+        captured = capsys.readouterr()
+        
+        assert 'There is no responsible_id for the experiment setup. Please provide it' in captured.out
+        
+        assert res == None
+        
+    def test_add_row_project_no_user_table(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no user table 
+        '''
+        
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+        name = "Super project"
+        project_responsible_id = 1
+        
+        tables_update.add_row_project_table(name, 
+                                                  project_responsible_id, 
+                                                  connection)
+        
+        captured = capsys.readouterr()
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM project')
+        
+        assert "The error 'no such table: main.user' occurred" in captured.out
+        assert existing_values == []
+
+    def test_add_row_project_new_table(self, capsys, create_example_db_user):
+        '''
+        function to test the behavior of the function when adding new table
+        '''
+        
+        connection =  create_example_db_user
+        
+        name = "Super project"
+        project_responsible_id = 1
+        
+        tables_update.add_row_project_table(name, 
+                                                  project_responsible_id, 
+                                                  connection)
+        
+        captured = capsys.readouterr()
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM project')
+        
+        assert 'The project table has been created.' in captured.out
+        assert 'The project {} has been succesfully added to the database.'.format(name) in captured.out
+        assert existing_values == [(1,
+                                    "Super project", 
+                                    1)]
+
+    def test_add_row_project_same_values(self, capsys, create_example_db_user):
+        '''
+        function to test the behavior of the function when getting same laboratory name
+        '''
+        
+        connection =  create_example_db_user
+        
+        name = "Super project"
+        project_responsible_id = 1
+        
+        tables_update.add_row_project_table(name, 
+                                            project_responsible_id, 
+                                            connection)
+        
+        # recretae the same data 
+        
+        project_responsible_id = 2
+        
+        tables_update.add_row_project_table(name, 
+                                            project_responsible_id, 
+                                            connection)
+        
+        captured = capsys.readouterr()
+                
+        
+        assert 'The project {} already exists and will not be added to the database.'.format(name) in captured.out
+
+    def test_add_row_laboratory_wrong_responsible_id(self, capsys, create_example_db_user):
+        '''
+        function to test the behavior of the function when having unknown responsible id number 
+        '''
+        
+        connection =  create_example_db_user
+        
+        name = "Super project"
+        project_responsible_id = 5
+        
+        tables_update.add_row_project_table(name, 
+                                            project_responsible_id, 
+                                            connection)
+        
+        captured = capsys.readouterr()
+          
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM project')
+                
+        assert "The error 'FOREIGN KEY constraint failed' occurred" in captured.out
+        assert existing_values == []
+
+    def test_add_row_project_two_rows(self, capsys, create_example_db_user):
+        '''
+        function to test the behavior of the function with different rows
+        '''
+        
+        connection =  create_example_db_user
+        
+        name = "Super project"
+        project_responsible_id = 1
+        
+        tables_update.add_row_project_table(name, 
+                                            project_responsible_id, 
+                                            connection)
+        
+        name = "Super other project"
+        project_responsible_id = 3
+        
+        tables_update.add_row_project_table(name, 
+                                            project_responsible_id, 
+                                            connection)
+             
+        captured = capsys.readouterr()
+                
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM project')
+        
+        assert 'The project table has been created.' in captured.out
+        assert 'The project {} has been succesfully added to the database.'.format(name) in captured.out
+        assert existing_values == [(1,
+                                    "Super project", 
+                                    1),
+                                   (2,
+                                    "Super other project", 
+                                    3)]
