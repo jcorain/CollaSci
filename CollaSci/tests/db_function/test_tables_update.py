@@ -2490,3 +2490,704 @@ class TestAdd_row_project_table():
                                    (2,
                                     "Super other project", 
                                     3)]
+
+class TestAdd_row_data_table():
+     '''
+     Class to test the add row function for the data table 
+     '''
+     def test_add_row_data_no_connection(self, capsys):
+       '''
+       function to test the behavior of the function when there is no connection 
+       '''
+       mass = 100
+       experiment_no = 1
+       field = 2 
+       temperature = 300 
+       date = '2018-01-21'
+       path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+       comment = None
+       experiment_setup_id = 1
+       user_id = 1
+       batch_id = 1
+       project_id = 1
+       connection = None
+      
+       res = tables_update.add_row_data_table(mass,
+                                              experiment_no, 
+                                              field, 
+                                              temperature, 
+                                              date,
+                                              path_import, 
+                                              comment, 
+                                              experiment_setup_id, 
+                                              user_id,
+                                              batch_id, 
+                                              project_id, 
+                                              connection)
+      
+       captured = capsys.readouterr()
+      
+       assert 'There is no connection to an SQL database. Please initiate it' in captured.out
+      
+       assert res == None
+         
+     # def test_add_row_batch_no_name(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no name 
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = None
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'There is no batch name. Please provide it' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_mass(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no mass 
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = None
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'There is no batch mass. Please provide it' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_color(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no color 
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = None
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'There is no batch color. Please provide it' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_type(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no type
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = None
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'The batch type is not in the list "powder", "polycristal" or "single cristal". Please make a choice' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_creation_date(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no creation date 
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = None
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'There is no batch creation date. Please provide it' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_compound_id(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no compound_id
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = None
+     #    grower_id = 1
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'There is no compound_id for the batch. Please provide it' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_grower_id(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no mass 
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = None
+        
+     #    res = tables_update.add_row_batch_table(name,
+     #                                            mass,
+     #                                            color,
+     #                                            Type,
+     #                                            creation_date,
+     #                                            compound_id,
+     #                                            grower_id,
+     #                                            connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'There is no grower_id for the batch. Please provide it' in captured.out
+        
+     #    assert res == None
+        
+     # def test_add_row_batch_no_user_table(self, capsys, tmp_path):
+     #    '''
+     #    function to test the behavior of the function when there is no user table
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    name_db = 'database_test.sqlite'
+     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+            
+     #    assert "The error 'no such table: main.user' occurred" in captured.out
+     #    assert existing_values == []    
+
+     # def test_add_row_batch_no_compound_table(self, capsys, create_example_db_user):
+     #    '''
+     #    function to test the behavior of the function when there is no user table
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+            
+     #    assert "The error 'no such table: main.compound' occurred" in captured.out
+     #    assert existing_values == []  
+
+     # def test_add_row_batch_no_compound_new_table(self, capsys, create_example_db_user_compound):
+     #    '''
+     #    function to test the behavior of the function when creating a new table
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user_compound
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+
+     #    assert 'The batch table has been created.' in captured.out
+     #    assert 'The batch {} has been succesfully added to the database.'.format(name) in captured.out
+     #    assert existing_values == [(1,
+     #                                "DQVOF 1",
+     #                                100,
+     #                                'green',
+     #                                "powder",
+     #                                '2019-10-12',
+     #                                1,
+     #                                1)]
+         
+     # def test_add_row_batch_no_compound_same_values(self, capsys, create_example_db_user_compound):
+     #    '''
+     #    function to test the behavior of the function when adding the same values
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user_compound
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    name = "DQVOF 1"
+     #    mass = 1200
+     #    color = 'green bis'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    assert 'The batch {} already exists and will not be added to the database.'.format(name) in captured.out
+
+     # def test_add_row_batch_no_compound_wrong_grower_id(self, capsys, create_example_db_user_compound):
+     #    '''
+     #    function to test the behavior of the function when setting unknown grower
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user_compound
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 5
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+        
+     #    assert "The error 'FOREIGN KEY constraint failed' occurred" in captured.out
+     #    assert existing_values == []
+
+     # def test_add_row_batch_no_compound_wrong_compound_id(self, capsys, create_example_db_user_compound):
+     #    '''
+     #    function to test the behavior of the function when setting unknown compound
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user_compound
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 5
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+        
+     #    assert "The error 'FOREIGN KEY constraint failed' occurred" in captured.out
+     #    assert existing_values == []
+
+     # def test_add_row_batch_no_compound_wrong_batch_type(self, capsys, create_example_db_user_compound):
+     #    '''
+     #    function to test the behavior of the function when setting wrong type
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user_compound
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "test"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 2
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+                
+     #    assert 'The batch type is not in the list "powder", "polycristal" or "single cristal". Please make a choice' in captured.out
+
+     # def test_add_row_batch_no_compound_two_rows(self, capsys, create_example_db_user_compound):
+     #    '''
+     #    function to test the behavior of the function when adding two rows
+     #    '''
+     #    #  create an empty connection with foreign keys ON
+     #    connection = create_example_db_user_compound
+        
+     #    name = "DQVOF 1"
+     #    mass = 100
+     #    color = 'green'
+     #    Type = "powder"
+     #    creation_date = '2019-10-12'
+     #    compound_id = 1
+     #    grower_id = 1
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    name = "Test 2002"
+     #    mass = 200
+     #    color = 'green'
+     #    Type = "single cristal"
+     #    creation_date = '2017-10-12'
+     #    compound_id = 2
+     #    grower_id = 3
+        
+     #    tables_update.add_row_batch_table(name,
+     #                                      mass,
+     #                                      color,
+     #                                      Type,
+     #                                      creation_date,
+     #                                      compound_id,
+     #                                      grower_id,
+     #                                      connection)
+        
+     #    captured = capsys.readouterr()
+        
+     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+        
+     #    assert 'The batch table has been created.' in captured.out
+     #    assert 'The batch {} has been succesfully added to the database.'.format(name) in captured.out
+     #    assert existing_values == [(1,
+     #                                "DQVOF 1",
+     #                                100,
+     #                                'green',
+     #                                "powder",
+     #                                '2019-10-12',
+     #                                1,
+     #                                1),
+     #                               (2,
+     #                                "Test 2002",
+     #                                200,
+     #                                'green',
+     #                                "single cristal",
+     #                                '2017-10-12',
+     #                                2,
+     #                                3)] 
+
+    # if mass is None:
+    #     print('There is no sample mass. Please provide it')
+    #     return None
+
+    # if experiment_no is None:
+    #     print('There is no experiment number. Please provide it')
+    #     return None
+    
+
+    # if date is None:
+    #     print('There is no date for the experiment. Please provide it')
+    #     return None
+    
+    # if path_import is None:
+    #     print('There is no path to retrieve the data. Please provide it')
+    #     return None
+    
+    # if experiment_setup_id is None:
+    #     print('There is no experiement setup id for the data. Please provide it')
+    #     return None
+    
+    # if user_id is None:
+    #     print('There is no user id for the data. Please provide it')
+    #     return None
+    
+    # if batch_id is None:
+    #     print('There is no batch id for the data. Please provide it')
+    #     return None
+    
+    # if project_id is None:
+    #     print('There is no project id for the data. Please provide it')
+    #     return None
+        
+    # print('\nCreate the first data\n')
+    
+    # mass = 100
+    # experiment_no = 1
+    # field = 2 
+    # temperature = 300 
+    # date = '2018-01-21'
+    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    # comment = None
+    # experiment_setup_id = 1
+    # user_id = 1
+    # batch_id = 1
+    # project_id = 1
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    
+    # print('\nCreate the second data\n')
+    
+    # mass = 150
+    # experiment_no = 5
+    # field = None 
+    # temperature = None 
+    # date = '2018-12-21'
+    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    # comment = None
+    # experiment_setup_id = 2
+    # user_id = 3
+    # batch_id = 1
+    # project_id = 2
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    # print('\ncheck what happens if we recreate the entry\n')
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    # print('\nCheck wrong experiement_setup\n')
+    
+    # mass = 150
+    # experiment_no = 5
+    # field = None 
+    # temperature = None 
+    # date = '2018-12-21'
+    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    # comment = None
+    # experiment_setup_id = 5
+    # user_id = 3
+    # batch_id = 1
+    # project_id = 2
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    # print('\nCheck wrong user\n')
+    
+    # mass = 150
+    # experiment_no = 5
+    # field = None 
+    # temperature = None 
+    # date = '2018-12-21'
+    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    # comment = None
+    # experiment_setup_id = 1
+    # user_id = 7
+    # batch_id = 1
+    # project_id = 2
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+
+
+    # print('\nCheck wrong batch\n')
+    
+    # mass = 150
+    # experiment_no = 5
+    # field = None 
+    # temperature = None 
+    # date = '2018-12-21'
+    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    # comment = None
+    # experiment_setup_id = 1
+    # user_id = 3
+    # batch_id = 10
+    # project_id = 2
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+
+
+    # print('\nCHeck wrong project\n')
+    
+    # mass = 150
+    # experiment_no = 5
+    # field = None 
+    # temperature = None 
+    # date = '2018-12-21'
+    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    # comment = None
+    # experiment_setup_id = 1
+    # user_id = 3
+    # batch_id = 1
+    # project_id = 15
+    
+    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
+    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
