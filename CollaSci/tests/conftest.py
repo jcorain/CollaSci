@@ -4,6 +4,7 @@ module for test configuration
 
 import pytest
 import os
+import shutil
 
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_update as tables_update
@@ -207,13 +208,13 @@ def create_example_db():
     field = 2 
     temperature = 300 
     date = '2018-01-21'
-    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    path_import = os.path.join(os.path.dirname(os.path.dirname(__file__)),'tests','data','PyzVOFZFCFC1T.dc.dat')
     comment = None
     experiment_setup_id = 1
     user_id = 1
     batch_id = 1
     project_id = 1
-    
+        
     tables_update.add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
     
@@ -224,7 +225,7 @@ def create_example_db():
     field = None 
     temperature = None 
     date = '2018-12-21'
-    path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
+    path_import = os.path.join(os.path.dirname(os.path.dirname(__file__)),'tests','data','PyzVOFZFCFC0p1T.dc.dat')
     comment = None
     experiment_setup_id = 2
     user_id = 3
@@ -233,6 +234,12 @@ def create_example_db():
     
     tables_update.add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
                           experiment_setup_id, user_id, batch_id, project_id, connection)
+    
+    # delete the data file 
+    
+    data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'data')
+    shutil.rmtree(data_file)
+
     
     return connection
 

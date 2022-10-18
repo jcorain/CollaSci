@@ -889,6 +889,9 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
     except IndexError:
         print("The project_id does not exists. Please provide a new one.")
         return None
+    except TypeError:
+        print("The project table does not exists. Please provide a new one.")
+        return None
     
     try:
         compound_id = database_utils.fetchall_query(connection, 'SELECT compound_id FROM batch WHERE id = {};'.format(batch_id))[0][0]
@@ -896,6 +899,9 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
         batch_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch WHERE id = {};'.format(batch_id))[0][0]
     except IndexError:
         print("The batch_id does not exists. Please provide a new one.")
+        return None
+    except TypeError:
+        print("The batch table does not exists. Please provide a new one.")
         return None
     
     try:
@@ -905,13 +911,18 @@ def add_row_data_table(mass, experiment_no, field, temperature, date, path_impor
     except IndexError:
         print("The experiment_setup_id does not exists. Please provide a new one.")
         return None
+    except TypeError:
+        print("The experiment setup table does not exists. Please provide a new one.")
+        return None
     
     try:
         user_lastname = database_utils.fetchall_query(connection, 'SELECT lastname FROM user WHERE id = {};'.format(user_id))[0][0]
     except IndexError:
         print("The user_id does not exists. Please provide a new one.")
         return None
-
+    except TypeError:
+        print("The user table does not exists. Please provide a new one.")
+        return None
 
     if field is not None:
         field_name = str(field) + 'T'

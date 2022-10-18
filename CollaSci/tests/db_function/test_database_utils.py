@@ -2,6 +2,8 @@
 test module for the database_utils module
 '''
 import pytest
+import os 
+import shutil
 import CollaSci.db_function.database_utils as database_utils
 
 class Testcreate_or_connect_db():
@@ -108,6 +110,7 @@ class TestExecute_query():
             database_utils.execute_query(connection = connection, query = query)
         
         connection.close()
+        
         assert "argument 1 must be str, not None" in str(error)
         
     def test_execute_querry_wrong_query(self, create_example_db, capsys):

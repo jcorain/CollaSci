@@ -2,6 +2,8 @@
 test module for tables_update module
 '''
 import pytest
+import os
+import shutil
 
 import CollaSci.db_function.tables_create as tables_create
 import CollaSci.db_function.tables_update as tables_update
@@ -2492,702 +2494,1082 @@ class TestAdd_row_project_table():
                                     3)]
 
 class TestAdd_row_data_table():
-     '''
-     Class to test the add row function for the data table 
-     '''
-     def test_add_row_data_no_connection(self, capsys):
-       '''
-       function to test the behavior of the function when there is no connection 
-       '''
-       mass = 100
-       experiment_no = 1
-       field = 2 
-       temperature = 300 
-       date = '2018-01-21'
-       path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-       comment = None
-       experiment_setup_id = 1
-       user_id = 1
-       batch_id = 1
-       project_id = 1
-       connection = None
+    '''
+    Class to test the add row function for the data table 
+    '''
+    def test_add_row_data_no_connection(self, capsys):
+      '''
+      function to test the behavior of the function when there is no connection 
+      '''
+      mass = 100
+      experiment_no = 1
+      field = 2 
+      temperature = 300 
+      date = '2018-01-21'
+      path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+      comment = None
+      experiment_setup_id = 1
+      user_id = 1
+      batch_id = 1
+      project_id = 1
+      connection = None
+     
+      res = tables_update.add_row_data_table(mass,
+                                             experiment_no, 
+                                             field, 
+                                             temperature, 
+                                             date,
+                                             path_import, 
+                                             comment, 
+                                             experiment_setup_id, 
+                                             user_id,
+                                             batch_id, 
+                                             project_id, 
+                                             connection)
+     
+      captured = capsys.readouterr()
+     
+      data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+      data_exists = os.path.exists(data_file)
       
-       res = tables_update.add_row_data_table(mass,
-                                              experiment_no, 
-                                              field, 
-                                              temperature, 
-                                              date,
-                                              path_import, 
-                                              comment, 
-                                              experiment_setup_id, 
-                                              user_id,
-                                              batch_id, 
-                                              project_id, 
-                                              connection)
-      
-       captured = capsys.readouterr()
-      
-       assert 'There is no connection to an SQL database. Please initiate it' in captured.out
-      
-       assert res == None
+      assert data_exists == False
+
+      assert 'There is no connection to an SQL database. Please initiate it' in captured.out
+      assert res == None
          
-     # def test_add_row_batch_no_name(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no name 
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
+    def test_add_row_data_no_mass(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no mass 
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = None
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
+           
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    name = None
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
+        assert data_exists == False
         
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
+        assert 'There is no sample mass. Please provide it' in captured.out
+           
+        assert res == None
         
-     #    captured = capsys.readouterr()
+    def test_add_row_data_no_experiment_no(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no experiment no
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = None
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    assert 'There is no batch name. Please provide it' in captured.out
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    assert res == None
-        
-     # def test_add_row_batch_no_mass(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no mass 
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = None
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
-        
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'There is no batch mass. Please provide it' in captured.out
-        
-     #    assert res == None
-        
-     # def test_add_row_batch_no_color(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no color 
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = None
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
-        
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'There is no batch color. Please provide it' in captured.out
-        
-     #    assert res == None
-        
-     # def test_add_row_batch_no_type(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no type
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = None
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
-        
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'The batch type is not in the list "powder", "polycristal" or "single cristal". Please make a choice' in captured.out
-        
-     #    assert res == None
-        
-     # def test_add_row_batch_no_creation_date(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no creation date 
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = None
-     #    compound_id = 1
-     #    grower_id = 1
-        
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'There is no batch creation date. Please provide it' in captured.out
-        
-     #    assert res == None
-        
-     # def test_add_row_batch_no_compound_id(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no compound_id
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = None
-     #    grower_id = 1
-        
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'There is no compound_id for the batch. Please provide it' in captured.out
-        
-     #    assert res == None
-        
-     # def test_add_row_batch_no_grower_id(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no mass 
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = None
-        
-     #    res = tables_update.add_row_batch_table(name,
-     #                                            mass,
-     #                                            color,
-     #                                            Type,
-     #                                            creation_date,
-     #                                            compound_id,
-     #                                            grower_id,
-     #                                            connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'There is no grower_id for the batch. Please provide it' in captured.out
-        
-     #    assert res == None
-        
-     # def test_add_row_batch_no_user_table(self, capsys, tmp_path):
-     #    '''
-     #    function to test the behavior of the function when there is no user table
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    name_db = 'database_test.sqlite'
-     #    connection = database_utils.create_or_connect_db(tmp_path, name_db)
-        
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
-        
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
-            
-     #    assert "The error 'no such table: main.user' occurred" in captured.out
-     #    assert existing_values == []    
+        assert data_exists == False
+           
+        assert 'There is no experiment number. Please provide it' in captured.out
+           
+        assert res == None
 
-     # def test_add_row_batch_no_compound_table(self, capsys, create_example_db_user):
-     #    '''
-     #    function to test the behavior of the function when there is no user table
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user
+    def test_add_row_data_no_date(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no date 
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = None
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
-            
-     #    assert "The error 'no such table: main.compound' occurred" in captured.out
-     #    assert existing_values == []  
+        assert data_exists == False
+           
+        assert 'There is no date for the experiment. Please provide it' in captured.out
+           
+        assert res == None
 
-     # def test_add_row_batch_no_compound_new_table(self, capsys, create_example_db_user_compound):
-     #    '''
-     #    function to test the behavior of the function when creating a new table
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user_compound
+    def test_add_row_data_no_path_import(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no mass 
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = None
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
+        assert data_exists == False
+           
+        assert 'There is no path to retrieve the data. Please provide it' in captured.out
+           
+        assert res == None
 
-     #    assert 'The batch table has been created.' in captured.out
-     #    assert 'The batch {} has been succesfully added to the database.'.format(name) in captured.out
-     #    assert existing_values == [(1,
-     #                                "DQVOF 1",
-     #                                100,
-     #                                'green',
-     #                                "powder",
-     #                                '2019-10-12',
-     #                                1,
-     #                                1)]
-         
-     # def test_add_row_batch_no_compound_same_values(self, capsys, create_example_db_user_compound):
-     #    '''
-     #    function to test the behavior of the function when adding the same values
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user_compound
+    def test_add_row_data_no_experiment_setup_id(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no experiment_setup_id
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = None
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    name = "DQVOF 1"
-     #    mass = 1200
-     #    color = 'green bis'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
-        
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    assert 'The batch {} already exists and will not be added to the database.'.format(name) in captured.out
+        assert data_exists == False
+           
+        assert 'There is no experiement setup id for the data. Please provide it' in captured.out
+           
+        assert res == None
 
-     # def test_add_row_batch_no_compound_wrong_grower_id(self, capsys, create_example_db_user_compound):
-     #    '''
-     #    function to test the behavior of the function when setting unknown grower
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user_compound
+    def test_add_row_data_no_user_id(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no user_id 
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = None
+        batch_id = 1
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 5
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    captured = capsys.readouterr()
-        
-     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
-        
-     #    assert "The error 'FOREIGN KEY constraint failed' occurred" in captured.out
-     #    assert existing_values == []
+        assert data_exists == False
+           
+        assert 'There is no user id for the data. Please provide it' in captured.out
+           
+        assert res == None
 
-     # def test_add_row_batch_no_compound_wrong_compound_id(self, capsys, create_example_db_user_compound):
-     #    '''
-     #    function to test the behavior of the function when setting unknown compound
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user_compound
+    def test_add_row_data_no_batch_id(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no batch_id 
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = None
+        project_id = 1
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 5
-     #    grower_id = 1
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
-        
-     #    assert "The error 'FOREIGN KEY constraint failed' occurred" in captured.out
-     #    assert existing_values == []
+        assert data_exists == False
+           
+        assert 'There is no batch id for the data. Please provide it' in captured.out
+           
+        assert res == None
 
-     # def test_add_row_batch_no_compound_wrong_batch_type(self, capsys, create_example_db_user_compound):
-     #    '''
-     #    function to test the behavior of the function when setting wrong type
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user_compound
+    def test_add_row_data_no_project_id(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no project_id
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = None
+       
+        res = tables_update.add_row_data_table(mass,
+                                               experiment_no, 
+                                               field, 
+                                               temperature, 
+                                               date,
+                                               path_import, 
+                                               comment, 
+                                               experiment_setup_id, 
+                                               user_id,
+                                               batch_id, 
+                                               project_id, 
+                                               connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "test"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 2
-     #    grower_id = 1
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
+        assert data_exists == False
+           
+        assert 'There is no project id for the data. Please provide it' in captured.out
+           
+        assert res == None
         
-     #    captured = capsys.readouterr()
+    def test_add_row_data_no_project_table(self, capsys, tmp_path):
+        '''
+        function to test the behavior of the function when there is no project table 
+        '''
+        #  create an empty connection with foreign keys ON
+        name_db = 'database_test.sqlite'
+        connection = database_utils.create_or_connect_db(tmp_path, name_db)
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+           
+        captured = capsys.readouterr()
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        assert data_exists == False
                 
-     #    assert 'The batch type is not in the list "powder", "polycristal" or "single cristal". Please make a choice' in captured.out
+        assert "The project table does not exists. Please provide a new one." in captured.out
+        assert existing_values == None
 
-     # def test_add_row_batch_no_compound_two_rows(self, capsys, create_example_db_user_compound):
-     #    '''
-     #    function to test the behavior of the function when adding two rows
-     #    '''
-     #    #  create an empty connection with foreign keys ON
-     #    connection = create_example_db_user_compound
+    def test_add_row_data_no_batch_table(self, capsys, create_example_db_project):
+        '''
+        function to test the behavior of the function when there is no batch table 
+        '''
+        connection = create_example_db_project
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+           
+        captured = capsys.readouterr()
         
-     #    name = "DQVOF 1"
-     #    mass = 100
-     #    color = 'green'
-     #    Type = "powder"
-     #    creation_date = '2019-10-12'
-     #    compound_id = 1
-     #    grower_id = 1
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
         
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
         
-     #    name = "Test 2002"
-     #    mass = 200
-     #    color = 'green'
-     #    Type = "single cristal"
-     #    creation_date = '2017-10-12'
-     #    compound_id = 2
-     #    grower_id = 3
-        
-     #    tables_update.add_row_batch_table(name,
-     #                                      mass,
-     #                                      color,
-     #                                      Type,
-     #                                      creation_date,
-     #                                      compound_id,
-     #                                      grower_id,
-     #                                      connection)
-        
-     #    captured = capsys.readouterr()
-        
-     #    existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM batch')
-        
-     #    assert 'The batch table has been created.' in captured.out
-     #    assert 'The batch {} has been succesfully added to the database.'.format(name) in captured.out
-     #    assert existing_values == [(1,
-     #                                "DQVOF 1",
-     #                                100,
-     #                                'green',
-     #                                "powder",
-     #                                '2019-10-12',
-     #                                1,
-     #                                1),
-     #                               (2,
-     #                                "Test 2002",
-     #                                200,
-     #                                'green',
-     #                                "single cristal",
-     #                                '2017-10-12',
-     #                                2,
-     #                                3)] 
+        assert data_exists == False
+                
+        assert "The batch table does not exists. Please provide a new one." in captured.out
+        assert existing_values == None
 
-    # if mass is None:
-    #     print('There is no sample mass. Please provide it')
-    #     return None
-
-    # if experiment_no is None:
-    #     print('There is no experiment number. Please provide it')
-    #     return None
-    
-
-    # if date is None:
-    #     print('There is no date for the experiment. Please provide it')
-    #     return None
-    
-    # if path_import is None:
-    #     print('There is no path to retrieve the data. Please provide it')
-    #     return None
-    
-    # if experiment_setup_id is None:
-    #     print('There is no experiement setup id for the data. Please provide it')
-    #     return None
-    
-    # if user_id is None:
-    #     print('There is no user id for the data. Please provide it')
-    #     return None
-    
-    # if batch_id is None:
-    #     print('There is no batch id for the data. Please provide it')
-    #     return None
-    
-    # if project_id is None:
-    #     print('There is no project id for the data. Please provide it')
-    #     return None
+    def test_add_row_data_no_experiment_setup_table(self, capsys, create_example_db_project_batch):
+        '''
+        function to test the behavior of the function when there is no experiment_setup table 
+        '''
+        connection = create_example_db_project_batch
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+           
+        captured = capsys.readouterr()
         
-    # print('\nCreate the first data\n')
-    
-    # mass = 100
-    # experiment_no = 1
-    # field = 2 
-    # temperature = 300 
-    # date = '2018-01-21'
-    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-    # comment = None
-    # experiment_setup_id = 1
-    # user_id = 1
-    # batch_id = 1
-    # project_id = 1
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
-    
-    
-    # print('\nCreate the second data\n')
-    
-    # mass = 150
-    # experiment_no = 5
-    # field = None 
-    # temperature = None 
-    # date = '2018-12-21'
-    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-    # comment = None
-    # experiment_setup_id = 2
-    # user_id = 3
-    # batch_id = 1
-    # project_id = 2
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
-    
-    # print('\ncheck what happens if we recreate the entry\n')
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
-    
-    # print('\nCheck wrong experiement_setup\n')
-    
-    # mass = 150
-    # experiment_no = 5
-    # field = None 
-    # temperature = None 
-    # date = '2018-12-21'
-    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-    # comment = None
-    # experiment_setup_id = 5
-    # user_id = 3
-    # batch_id = 1
-    # project_id = 2
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
-    
-    # print('\nCheck wrong user\n')
-    
-    # mass = 150
-    # experiment_no = 5
-    # field = None 
-    # temperature = None 
-    # date = '2018-12-21'
-    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-    # comment = None
-    # experiment_setup_id = 1
-    # user_id = 7
-    # batch_id = 1
-    # project_id = 2
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        assert data_exists == False
+                
+        assert "The experiment setup table does not exists. Please provide a new one." in captured.out
+        assert existing_values == None
+        
+    def test_add_row_data_new_table(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function when creating a new table 
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+           
+        captured = capsys.readouterr()
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        # create the pathname of the experimental setup and check that it does not exists  
+        # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
+        # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
+        
+        app_rep = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
+        compound_id = database_utils.fetchall_query(connection, 'SELECT compound_id FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        compound_name = database_utils.fetchall_query(connection, 'SELECT name FROM compound WHERE id = {};'.format(compound_id))[0][0]
+        batch_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        experiment_type_id = database_utils.fetchall_query(connection, 'SELECT experiment_type_id FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        experiment_type_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_type WHERE id = {};'.format(experiment_type_id))[0][0]
+        experiment_setup_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        user_lastname = database_utils.fetchall_query(connection, 'SELECT lastname FROM user WHERE id = {};'.format(user_id))[0][0]
+        field_name = str(field) + 'T'
+        temp_name = str(temperature) + 'K'
+        date_name = ''.join([date[0:3], date[5:6], date[8:9]])
 
+        # create the filename
+        
+        new_filename = '_'.join([batch_name, 
+                                 experiment_type_name, 
+                                 experiment_setup_name, 
+                                 user_lastname, 
+                                 field_name, 
+                                 temp_name, 
+                                 str(experiment_no), 
+                                 date_name]) + '.csv'
+        
+        
+        
+        new_path = os.path.join(app_rep,
+                                'data',
+                                project_name,
+                                compound_name,
+                                batch_name,
+                                experiment_type_name,
+                                experiment_setup_name,
+                                new_filename)
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        # remove the data folder
+        
+        shutil.rmtree(data_file)
+        
+        assert data_exists == True
+                
+        assert 'The data table has been created.' in captured.out
+        assert 'The data {} has been succesfully added to the database.'.format(new_path) in captured.out
+        assert existing_values == [(1,
+                                    100,
+                                    1,
+                                    2 ,
+                                    300 ,
+                                    '2018-01-21',
+                                    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat'),
+                                    new_path, 
+                                    None,
+                                    1,
+                                    1,
+                                    1,
+                                    1)]
 
-    # print('\nCheck wrong batch\n')
-    
-    # mass = 150
-    # experiment_no = 5
-    # field = None 
-    # temperature = None 
-    # date = '2018-12-21'
-    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-    # comment = None
-    # experiment_setup_id = 1
-    # user_id = 3
-    # batch_id = 10
-    # project_id = 2
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+    def test_add_row_data_new_table_same_values(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function when adding the same values 
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+        
+        # recreate the same data 
+        
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+           
+        captured = capsys.readouterr()
+        
+        # create the pathname of the experimental setup and check that it does not exists  
+        # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
+        # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
+        
+        app_rep = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
+        compound_id = database_utils.fetchall_query(connection, 'SELECT compound_id FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        compound_name = database_utils.fetchall_query(connection, 'SELECT name FROM compound WHERE id = {};'.format(compound_id))[0][0]
+        batch_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        experiment_type_id = database_utils.fetchall_query(connection, 'SELECT experiment_type_id FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        experiment_type_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_type WHERE id = {};'.format(experiment_type_id))[0][0]
+        experiment_setup_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        user_lastname = database_utils.fetchall_query(connection, 'SELECT lastname FROM user WHERE id = {};'.format(user_id))[0][0]
+        field_name = str(field) + 'T'
+        temp_name = str(temperature) + 'K'
+        date_name = ''.join([date[0:3], date[5:6], date[8:9]])
 
+        # create the filename
+        
+        new_filename = '_'.join([batch_name, 
+                                 experiment_type_name, 
+                                 experiment_setup_name, 
+                                 user_lastname, 
+                                 field_name, 
+                                 temp_name, 
+                                 str(experiment_no), 
+                                 date_name]) + '.csv'
+        
+        
+        
+        new_path = os.path.join(app_rep,
+                                'data',
+                                project_name,
+                                compound_name,
+                                batch_name,
+                                experiment_type_name,
+                                experiment_setup_name,
+                                new_filename)
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        # remove the data folder
+        
+        shutil.rmtree(data_file)
+        
+        assert data_exists == True
+                
+        assert 'The data {} already exists and will not be added to the database.'.format(new_path) in captured.out
+    
+    def test_add_row_data_wrong_project_id(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function with wrong project_id 
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 10
+       
+        tables_update.add_row_data_table(mass,
+                                          experiment_no, 
+                                          field, 
+                                          temperature, 
+                                          date,
+                                          path_import, 
+                                          comment, 
+                                          experiment_setup_id, 
+                                          user_id,
+                                          batch_id, 
+                                          project_id, 
+                                          connection)
+                   
+        captured = capsys.readouterr()
+        
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        assert data_exists == False
+        
+        assert 'The project_id does not exists. Please provide a new one.' in captured.out
+        assert existing_values == None
+        
+    def test_add_row_data_wrong_batch_id(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function with wrong batch_id
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 10
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                          experiment_no, 
+                                          field, 
+                                          temperature, 
+                                          date,
+                                          path_import, 
+                                          comment, 
+                                          experiment_setup_id, 
+                                          user_id,
+                                          batch_id, 
+                                          project_id, 
+                                          connection)
+                   
+        captured = capsys.readouterr()
+        
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        assert data_exists == False
+        
+        assert 'The batch_id does not exists. Please provide a new one.' in captured.out
+        assert existing_values == None       
 
-    # print('\nCHeck wrong project\n')
-    
-    # mass = 150
-    # experiment_no = 5
-    # field = None 
-    # temperature = None 
-    # date = '2018-12-21'
-    # path_import = 'D:\\Travail\\PSI\\BackUpFeb2019\\MuSR_Project_Jco\\Experiment\\Squid\\ImVOF\\PyzVOF\\PyzVOFZFCFC1T.dc.dat'
-    # comment = None
-    # experiment_setup_id = 1
-    # user_id = 3
-    # batch_id = 1
-    # project_id = 15
-    
-    # add_row_data_table(mass, experiment_no, field, temperature, date, path_import, comment, 
-    #                       experiment_setup_id, user_id, batch_id, project_id, connection)
+    def test_add_row_data_wrong_user_id(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function with wrong user_id
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 10
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                          experiment_no, 
+                                          field, 
+                                          temperature, 
+                                          date,
+                                          path_import, 
+                                          comment, 
+                                          experiment_setup_id, 
+                                          user_id,
+                                          batch_id, 
+                                          project_id, 
+                                          connection)
+                   
+        captured = capsys.readouterr()
+        
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        assert data_exists == False
+        
+        assert 'The user_id does not exists. Please provide a new one.' in captured.out
+        assert existing_values == None  
+        
+    def test_add_row_data_wrong_experiment_setup_id(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function with wrong experiment_setup_id
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 10
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                          experiment_no, 
+                                          field, 
+                                          temperature, 
+                                          date,
+                                          path_import, 
+                                          comment, 
+                                          experiment_setup_id, 
+                                          user_id,
+                                          batch_id, 
+                                          project_id, 
+                                          connection)
+                   
+        captured = capsys.readouterr()
+        
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        assert data_exists == False
+        
+        assert 'The experiment_setup_id does not exists. Please provide a new one.' in captured.out
+        assert existing_values == None  
+
+    def test_add_row_data_two_rows(self, capsys, create_example_db_project_batch_experiment_setup):
+        '''
+        function to test the behavior of the function when having severl rows
+        '''
+        connection = create_example_db_project_batch_experiment_setup
+           
+        mass = 100
+        experiment_no = 1
+        field = 2 
+        temperature = 300 
+        date = '2018-01-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat')
+        comment = None
+        experiment_setup_id = 1
+        user_id = 1
+        batch_id = 1
+        project_id = 1
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+        
+        # create the pathname of the experimental setup and check that it does not exists  
+        # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
+        # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
+        
+        app_rep = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
+        compound_id = database_utils.fetchall_query(connection, 'SELECT compound_id FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        compound_name = database_utils.fetchall_query(connection, 'SELECT name FROM compound WHERE id = {};'.format(compound_id))[0][0]
+        batch_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        experiment_type_id = database_utils.fetchall_query(connection, 'SELECT experiment_type_id FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        experiment_type_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_type WHERE id = {};'.format(experiment_type_id))[0][0]
+        experiment_setup_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        user_lastname = database_utils.fetchall_query(connection, 'SELECT lastname FROM user WHERE id = {};'.format(user_id))[0][0]
+        field_name = str(field) + 'T'
+        temp_name = str(temperature) + 'K'
+        date_name = ''.join([date[0:3], date[5:6], date[8:9]])
+
+        # create the filename
+        
+        new_filename_1 = '_'.join([batch_name, 
+                                 experiment_type_name, 
+                                 experiment_setup_name, 
+                                 user_lastname, 
+                                 field_name, 
+                                 temp_name, 
+                                 str(experiment_no), 
+                                 date_name]) + '.csv'
+        
+        
+        
+        new_path_1 = os.path.join(app_rep,
+                                'data',
+                                project_name,
+                                compound_name,
+                                batch_name,
+                                experiment_type_name,
+                                experiment_setup_name,
+                                new_filename_1)
+        
+        
+        # create the second row 
+        
+        mass = 150
+        experiment_no = 5
+        field = None 
+        temperature = None 
+        date = '2018-12-21'
+        path_import = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC0p1T.dc.dat')
+        comment = None
+        experiment_setup_id = 2
+        user_id = 3
+        batch_id = 1
+        project_id = 2
+       
+        tables_update.add_row_data_table(mass,
+                                         experiment_no, 
+                                         field, 
+                                         temperature, 
+                                         date,
+                                         path_import, 
+                                         comment, 
+                                         experiment_setup_id, 
+                                         user_id,
+                                         batch_id, 
+                                         project_id, 
+                                         connection)
+        
+        # create the pathname of the experimental setup and check that it does not exists  
+        # the path is defined as app_rep/project_name/compound_name/batch_name/experiment_type_name/experiment_setup_name
+        # and the data name is defined as batch_name_experiement_type_name_experiment_setup_name_user_lastname_field(if exists)_temperature(if exists)_experiment_no_date.
+        
+        app_rep = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        project_name = database_utils.fetchall_query(connection, 'SELECT name FROM project WHERE id = {};'.format(project_id))[0][0]
+        compound_id = database_utils.fetchall_query(connection, 'SELECT compound_id FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        compound_name = database_utils.fetchall_query(connection, 'SELECT name FROM compound WHERE id = {};'.format(compound_id))[0][0]
+        batch_name = database_utils.fetchall_query(connection, 'SELECT name FROM batch WHERE id = {};'.format(batch_id))[0][0]
+        experiment_type_id = database_utils.fetchall_query(connection, 'SELECT experiment_type_id FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        experiment_type_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_type WHERE id = {};'.format(experiment_type_id))[0][0]
+        experiment_setup_name = database_utils.fetchall_query(connection, 'SELECT name FROM experiment_setup WHERE id = {};'.format(experiment_setup_id))[0][0]
+        user_lastname = database_utils.fetchall_query(connection, 'SELECT lastname FROM user WHERE id = {};'.format(user_id))[0][0]
+        field_name = ''
+        temp_name = ''
+        date_name = ''.join([date[0:3], date[5:6], date[8:9]])
+
+        # create the filename
+        
+        new_filename_2 = '_'.join([batch_name, 
+                                 experiment_type_name, 
+                                 experiment_setup_name, 
+                                 user_lastname, 
+                                 field_name, 
+                                 temp_name, 
+                                 str(experiment_no), 
+                                 date_name]) + '.csv'
+        
+        
+        
+        new_path_2 = os.path.join(app_rep,
+                                'data',
+                                project_name,
+                                compound_name,
+                                batch_name,
+                                experiment_type_name,
+                                experiment_setup_name,
+                                new_filename_2)
+           
+        captured = capsys.readouterr()
+        
+        existing_values = database_utils.fetchall_query(connection, 'SELECT * FROM data')
+        
+        data_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),'data')
+        data_exists = os.path.exists(data_file)
+        
+        # remove the data folder
+        
+        shutil.rmtree(data_file)
+        
+        assert data_exists == True
+                
+        assert 'The data table has been created.' in captured.out
+        assert 'The data {} has been succesfully added to the database.'.format(new_path_1) in captured.out
+        assert 'The data {} has been succesfully added to the database.'.format(new_path_2) in captured.out
+        assert existing_values == [(1,
+                                    100,
+                                    1,
+                                    2 ,
+                                    300 ,
+                                    '2018-01-21',
+                                    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC1T.dc.dat'),
+                                    new_path_1, 
+                                    None,
+                                    1,
+                                    1,
+                                    1,
+                                    1),
+                                   (2,
+                                    150,
+                                    5,
+                                    None ,
+                                    None ,
+                                    '2018-12-21',
+                                    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),'tests','data','PyzVOFZFCFC0p1T.dc.dat'),
+                                    new_path_2, 
+                                    None,
+                                    2,
+                                    3,
+                                    1,
+                                    2)]
