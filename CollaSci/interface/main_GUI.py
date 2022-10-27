@@ -263,30 +263,31 @@ def open_database_widget(data):
 def create_tabs(connection):
     
     if connection is not None:
-    # create the tabControl
-        tabframe = tk.Frame(root)
-        tabControl = ttk.Notebook(tabframe)
         
+        # create the tabControl
+        tabframe = tk.Frame(root)
+        tabcontrol = ttk.Notebook(tabframe)
+       
         # create the tabs 
         
-        user_tab = tab_user.UserWidget(tabControl, connection)
-        tabControl.add(user_tab, text = 'User')
+        user_tab = tab_user.UserWidget(tabcontrol, connection)
+        tabcontrol.add(user_tab, text = 'User')
+                
+        tab_experiment = tk.Frame(tabcontrol)
+        tabcontrol.add(tab_experiment, text = 'Experiment')
         
-        tab_experiment = ttk.Frame(tabControl)
-        tabControl.add(tab_experiment, text = 'Experiment')
+        tab_material = tk.Frame(tabcontrol)
+        tabcontrol.add(tab_material, text = 'Material')
         
-        tab_material = ttk.Frame(tabControl)
-        tabControl.add(tab_material, text = 'Material')
+        tab_project = tk.Frame(tabcontrol)
+        tabcontrol.add(tab_project, text = 'Project')
         
-        tab_project = ttk.Frame(tabControl)
-        tabControl.add(tab_project, text = 'Project')
+        tab_data = tk.Frame(tabcontrol)
+        tabcontrol.add(tab_data, text = 'Data')
         
-        tab_data = ttk.Frame(tabControl)
-        tabControl.add(tab_data, text = 'Data')
-        
-        tabframe.pack(side = 'left', fill = 'both', expand = 1)
-        tabControl.pack(expand = 1, fill = 'both')
-    
+        tabframe.pack(fill = 'both', expand = 1)
+        tabcontrol.pack(expand = 1, fill = 'both')
+                    
 # create the field to upload the database 
 
 def LoadDb():

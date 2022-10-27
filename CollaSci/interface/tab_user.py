@@ -13,28 +13,39 @@ class UserWidget(tk.Frame):
         
         # define the frame for the user tab
         tk.Frame.__init__(self, parent)
-        
-        # define the first label holding the already defined users 
-        self.label = tk.Label(self, text = 'Registered users', relief = 'ridge')
-        self.label.pack()
-        UserTree(self, connection)
-        
-class UserTree():
+        create_user_tabs(self, connection)
+
+def create_user_tabs(widget, connection):     
+    # define the new tabs with user, status, laboratory and university 
+    widget.tabcontrol_user = ttk.Notebook(widget)
+    
+    widget.tab_user = UserTree(widget.tabcontrol_user, connection)
+    widget.tabcontrol_user.add(widget.tab_user, text = 'User')
+    
+    
+    # self.tab_status = StatusTree(self.tabcontrol_user, connection)
+    # self.tabcontrol_user.add(self.tab_status, text = 'Status')
+    
+    widget.tabcontrol_user.pack(expand = 1, fill = 'both')
+    
+class UserTree(tk.Frame):
     def __init__(self, parent, connection): 
-        
+        tk.Frame.__init__(self, parent)
         # get a table with the connection 
         if connection is not None:
             # get the results from the user database
-            
             res = database_utils.fetchall_query(connection, 'SELECT * FROM user')
             if res is not None:
                 # define columns 
             
-                user_col = ('id','firstname','lastname','status','laboratory')    
+                col = ('id','firstname','lastname','status','laboratory')    
             
+                # define the first label holding the already defined users 
+                self.label_user = tk.Label(self, text = 'Registered users', relief = 'ridge')
+                self.label_user.pack()
                 # initiate treeview
                 
-                self.user_tree = ttk.Treeview(parent, columns = user_col, show = 'headings')
+                self.user_tree = ttk.Treeview(self, columns = col, show = 'headings')
                 
                 # define headings
                 
@@ -43,13 +54,10 @@ class UserTree():
                 self.user_tree.heading('lastname', text = 'Last Name')
                 self.user_tree.heading('status', text = 'Status')
                 self.user_tree.heading('laboratory', text = 'Laboratory')
-                
-                
-    
+            
                 # get the values related to the user table
                 
                 val = None
-                
                 for user in res:
                     val = (user[0],
                            user[1],
@@ -63,22 +71,21 @@ class UserTree():
                 
                 # add the delete frame 
                 
-                GUI_utils.DeleteButton(parent, connection, 'user')
-                GUI_utils.AddButton(parent, connection, 'user', self)
+                GUI_utils.DeleteButton(self, connection, 'user', parent)
+                GUI_utils.AddButton(self, connection, 'user')
 
                 
             else:
-                self.label_no_user_data = tk.Label(parent, text = 'There is no data in the user table')
+                self.label_no_user_data = tk.Label(self, text = 'There is no data in the user table')
                 self.label_no_user_data.pack()
         else:
-            self.label_no_user_data = tk.Label(parent, text = 'There is no SQL connection')
+            self.label_no_user_data = tk.Label(self, text = 'There is no SQL connection')
             self.label_no_user_data.pack()
             
 class UserAdd():
-    def __init__(self, parent, connection, parent_parent):
+    def __init__(self, parent, connection, grandparent):
         if connection is not None:
             # add the first name values 
-            
             self.firstname = tk.Label(parent, text = 'First Name')
             self.firstname.pack()
             
@@ -137,10 +144,10 @@ class UserAdd():
             
             # add the add button 
             
-            self.add_button = tk.Button(parent, text = 'Add user column', command = lambda : add_user_col(parent, firstname, lastname, status, laboratory, connection, parent_parent))
+            self.add_button = tk.Button(parent, text = 'Add user column', command = lambda : add_user_col(parent, firstname, lastname, status, laboratory, connection, grandparent))
             self.add_button.pack()
         
-def add_user_col(parent, firstname, lastname, status, laboratory, connection, parent_parent):
+def add_user_col(parent, firstname, lastname, status, laboratory, connection, grandparent):
     
     # get the status id 
     status_id = database_utils.fetchall_query(connection, 'SELECT id FROM status WHERE name = "{}"'.format(status.get()))[0][0]
@@ -151,18 +158,92 @@ def add_user_col(parent, firstname, lastname, status, laboratory, connection, pa
     
     table_update.add_row_user_table(firstname.get(), lastname.get(), status_id, laboratory_id, connection)
     
-    # to updtae the treeview, delete it and then redo it 
+    # update the user table 
     
-    for widget in parent_parent.winfo_children():
-        print(str(widget))
-        # # delete delete button
-        # if '!button' in str(widget):
-        #     widget.destroy()
-        
-        # # delte treview and recreate it 
-        # if 'treeview' in str(widget):
-        #     widget.destroy()
-        #     UserTree(parent, connection)                
-    
+    GUI_utils.update_table(grandparent, 'user', connection)
     parent.destroy()
+
+
+class StatusTree(tk.Frame):
+    def __init__(self, parent, connection): 
         
+        tk.Frame.__init__(self, parent)
+        
+        # get a table with the connection 
+        if connection is not None:
+            # get the results from the user database
+            res = database_utils.fetchall_query(connection, 'SELECT * FROM status')
+            if res is not None:
+                # define columns 
+            
+                col = ('id','name')    
+            
+                # define the first label holding the already defined users 
+                self.label_status = tk.Label(self, text = 'Registered status', relief = 'ridge')
+                self.label_status.pack()
+            
+                # initiate treeview
+                
+                self.status_tree = ttk.Treeview(parent, columns = col, show = 'headings')
+                
+                # define headings
+                
+                self.status_tree.heading('id', text = 'id')
+                self.status_tree.heading('name', text = 'Name')                
+                
+    
+                # get the values related to the user table
+                
+                val = None
+                
+                for value in res:
+                    val = (value[0],
+                           value[1]) 
+                    self.status_tree.insert('',tk.END, values = val)
+
+                self.status_tree.pack(expand = True, fill = 'both')
+                
+                # add the delete frame 
+                
+                GUI_utils.DeleteButton(parent, connection, 'status')
+                GUI_utils.AddButton(parent, connection, 'status')
+
+                
+            else:
+                self.label_no_status_data = tk.Label(parent, text = 'There is no data in the status table')
+                self.label_no_status_data.pack()
+        else:
+            self.label_no_status_data = tk.Label(parent, text = 'There is no SQL connection')
+            self.label_no_status_data.pack()
+            
+class StatusAdd():
+    def __init__(self, parent, connection, grandparent):
+        if connection is not None:
+            # add the first name values 
+            self.statusname = tk.Label(parent, text = 'Name')
+            self.statusname.pack()
+            
+            # define the firstname string value 
+            
+            statusname = tk.StringVar(parent)
+            
+            # get the entry for firstname 
+           
+            self.statusname_entry = tk.Entry(parent, textvariable = statusname)
+            self.statusname_entry.pack()
+            
+        
+            
+            # add the add button 
+            
+            self.status_add_button = tk.Button(parent, text = 'Add status column', command = lambda : add_status_col(parent, statusname, connection, grandparent))
+            self.status_add_button.pack()
+        
+def add_status_col(parent, name, connection, grandparent):
+        
+    table_update.add_row_status_table(name.get(), connection)
+    
+    # update the user table 
+    
+    GUI_utils.update_table(grandparent, 'status', connection)
+    parent.destroy()
