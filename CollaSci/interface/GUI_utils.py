@@ -21,11 +21,11 @@ def delete_popup(parent, connection, table_name, grandparent):
     
     # define the first string value 
     
-    mystring = tk.StringVar(popup)
+    id_val = tk.StringVar(popup)
     
     # get the entry for col number 
     
-    id_entry = tk.Entry(popup, textvariable = mystring)
+    id_entry = tk.Entry(popup, textvariable = id_val)
     id_entry.pack()
     
     # define the callback from button 
@@ -41,20 +41,20 @@ def delete_popup(parent, connection, table_name, grandparent):
         # if the id to delete is in the possible value delete it 
         # else get a warning message
 
-        if mystring.get() in existing_id:
-            confirmation = tk.messagebox.askokcancel('','The colum id number {} is going to be deleted.'.format(mystring.get()))
+        if id_val.get() in existing_id:
+            confirmation = tk.messagebox.askokcancel('','The colum id number {} is going to be deleted.'.format(id_val.get()))
             if confirmation:
-                database_utils.delete_id_from_table(connection, table_name, int(mystring.get()))
+                database_utils.delete_id_from_table(connection, table_name, int(id_val.get()))
                 update_table(parent, table_name, connection, grandparent)
         else:
-            tk.messagebox.showinfo('','The colum id number {} does not exist. Please select another id value.'.format(mystring.get()))
+            tk.messagebox.showinfo('','The colum id number {} does not exist. Please select another id value.'.format(id_val.get()))
             
         popup.destroy()
         
     ok_button = tk.Button(popup, text = 'Delete column', command = lambda : delete_col(parent, connection, table_name, grandparent))
     ok_button.pack()
     
-def add_popup(parent, connection, table_name):
+def add_popup(parent, connection, table_name, grandparent):
     
     # define the popup window
     
@@ -62,50 +62,23 @@ def add_popup(parent, connection, table_name):
     popup.title('Add a column')
     
     if table_name == 'user':
-        tab_user.UserAdd(popup, connection, parent)
+        tab_user.UserAdd(popup, connection, parent, grandparent)
     elif table_name == 'status':
-        tab_user.StatusAdd(popup, connection, parent)
+        tab_user.StatusAdd(popup, connection, parent, grandparent)
         
 def update_table(parent, table_name, connection, grandparent):
     # to update the table, delete it and then redo it
     for widget in grandparent.winfo_children():
         widget.destroy()
-    
-    
-    tab_user.create_user_tabs(grandparent, connection)
-    # tab_user.UserTree(grandparent, connection)
-    # for widget in parent.winfo_children():
-    #     # delete delete button
-    #     widget.destroy()
-    #     # if '!button' in str(widget):
-    #     #     widget.destroy()
+    if table_name == 'user':
+        tab_user.create_user_tabs(grandparent, connection)
+
+class DeleteButton():
+    def __init__(self, parent, connection, table_name, grandparent):                
+        self.del_button = tk.Button(parent, text = 'Delete a column', command = lambda : delete_popup(parent, connection, table_name, grandparent))
+        self.del_button.pack()
         
-    #     # delete treview and recreate it 
-    #     if 'treeview' in str(widget):
-    #        #  widget.destroy()
-    #         if table_name == 'user':
-    #             tab_user.UserTree(parent, connection, grandparent)
-    #         elif table_name == 'status':
-    #             tab_user.StatusTree(parent, connection)
-
-
-class DeleteButton(tk.Frame):
+class AddButton():
     def __init__(self, parent, connection, table_name, grandparent):
-        
-        # define the frame for the delete buttton
-        tk.Frame.__init__(self, parent)
-        
-        # define the first label holding the already defined users 
-                
-        self.label_del = tk.Button(parent, text = 'Delete a column', command = lambda : delete_popup(parent, connection, table_name, grandparent))
-        self.label_del.pack()
-        
-class AddButton(tk.Frame):
-    def __init__(self, parent, connection, table_name):
-        # define the frame for the delete buttton
-        tk.Frame.__init__(self, parent)
-        
-        # define the first label holding the already defined users 
-        
-        self.label_add = tk.Button(parent, text = 'Add a column', command = lambda : add_popup(parent, connection, table_name))
-        self.label_add.pack()
+        self.add_button = tk.Button(parent, text = 'Add a column', command = lambda : add_popup(parent, connection, table_name, grandparent))
+        self.add_button.pack()
