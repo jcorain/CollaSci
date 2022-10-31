@@ -7,7 +7,7 @@ import tkinter as tk
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.interface.tab_user as tab_user
 
-def delete_popup(parent, connection, table_name, grandparent):
+def delete_popup(connection, table_name, grandparent):
     
     # define the popup window
         
@@ -30,7 +30,7 @@ def delete_popup(parent, connection, table_name, grandparent):
     
     # define the callback from button 
     
-    def delete_col(parent, connection, table_name, grandparent):
+    def delete_col(connection, table_name, grandparent):
                 
         # get thepossible id values to delete 
         existing_id = []
@@ -45,16 +45,16 @@ def delete_popup(parent, connection, table_name, grandparent):
             confirmation = tk.messagebox.askokcancel('','The colum id number {} is going to be deleted.'.format(id_val.get()))
             if confirmation:
                 database_utils.delete_id_from_table(connection, table_name, int(id_val.get()))
-                update_table(parent, table_name, connection, grandparent)
+                update_table(table_name, connection, grandparent)
         else:
             tk.messagebox.showinfo('','The colum id number {} does not exist. Please select another id value.'.format(id_val.get()))
             
         popup.destroy()
         
-    ok_button = tk.Button(popup, text = 'Delete column', command = lambda : delete_col(parent, connection, table_name, grandparent))
+    ok_button = tk.Button(popup, text = 'Delete column', command = lambda : delete_col(connection, table_name, grandparent))
     ok_button.pack()
     
-def add_popup(parent, connection, table_name, grandparent):
+def add_popup(connection, table_name, grandparent):
     
     # define the popup window
     
@@ -62,11 +62,11 @@ def add_popup(parent, connection, table_name, grandparent):
     popup.title('Add a column')
     
     if table_name == 'user':
-        tab_user.UserAdd(popup, connection, parent, grandparent)
+        tab_user.UserAdd(popup, connection, grandparent)
     elif table_name == 'status':
-        tab_user.StatusAdd(popup, connection, parent, grandparent)
+        tab_user.StatusAdd(popup, connection, grandparent)
         
-def update_table(parent, table_name, connection, grandparent):
+def update_table(table_name, connection, grandparent):
     # to update the table, delete it and then redo it
     for widget in grandparent.winfo_children():
         widget.destroy()
@@ -75,10 +75,10 @@ def update_table(parent, table_name, connection, grandparent):
 
 class DeleteButton():
     def __init__(self, parent, connection, table_name, grandparent):                
-        self.del_button = tk.Button(parent, text = 'Delete a column', command = lambda : delete_popup(parent, connection, table_name, grandparent))
+        self.del_button = tk.Button(parent, text = 'Delete a column', command = lambda : delete_popup(connection, table_name, grandparent))
         self.del_button.pack()
         
 class AddButton():
     def __init__(self, parent, connection, table_name, grandparent):
-        self.add_button = tk.Button(parent, text = 'Add a column', command = lambda : add_popup(parent, connection, table_name, grandparent))
+        self.add_button = tk.Button(parent, text = 'Add a column', command = lambda : add_popup(connection, table_name, grandparent))
         self.add_button.pack()

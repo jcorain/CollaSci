@@ -76,67 +76,67 @@ class UserTree(tk.Frame):
        
        
 class UserAdd():
-    def __init__(self, parent, connection, grandparent, grandgrandparent):
+    def __init__(self, popup, connection, grandparent):
         # add the first name values 
-        self.firstname_lab = tk.Label(parent, text = 'First Name')
+        self.firstname_lab = tk.Label(popup, text = 'First Name')
         self.firstname_lab.pack()
         
         # define the firstname string value 
         
-        firstname = tk.StringVar(parent)
+        firstname = tk.StringVar(popup)
         
         # get the entry for firstname 
        
-        self.firstname_entry = tk.Entry(parent, textvariable = firstname)
+        self.firstname_entry = tk.Entry(popup, textvariable = firstname)
         self.firstname_entry.pack()
         
         # add the first name values 
-        self.lastname_lab = tk.Label(parent, text = 'Last Name')
+        self.lastname_lab = tk.Label(popup, text = 'Last Name')
         self.lastname_lab.pack()
         
         #define the firstname string value 
        
-        lastname = tk.StringVar(parent)
+        lastname = tk.StringVar(popup)
         
         # get the entry for lastname 
        
-        self.lastname_entry = tk.Entry(parent, textvariable = lastname)
+        self.lastname_entry = tk.Entry(popup, textvariable = lastname)
         self.lastname_entry.pack()
         
         # add the status values 
         
-        self.status_lab = tk.Label(parent, text = 'Status (if the status you want does not exist in the list please update the status table.')
+        self.status_lab = tk.Label(popup, text = 'Status (if the status you want does not exist in the list please update the status table.')
         self.status_lab.pack()
         
         #define the status string value 
        
-        status = tk.StringVar(parent)
+        status = tk.StringVar(popup)
         
         # get the list of existing status 
         status_val = [val[0] for val in database_utils.fetchall_query(connection, 'SELECT name FROM status')]
  
-        self.statuslist = ttk.Combobox(parent, values = status_val, textvariable = status)
+        self.statuslist = ttk.Combobox(popup, values = status_val, textvariable = status)
         self.statuslist.set("Pick a status")
         self.statuslist.pack()
         
         # add the laboratory values 
         
-        self.laboratory_lab = tk.Label(parent, text = 'Laboratory (if the laboratory you want does not exist in the list please update the laboratory table.')
+        self.laboratory_lab = tk.Label(popup, text = 'Laboratory (if the laboratory you want does not exist in the list please update the laboratory table.')
         self.laboratory_lab.pack()
         
         #define the laboratory string value 
        
-        laboratory = tk.StringVar(parent)
+        laboratory = tk.StringVar(popup)
         # get the list of existing status 
         laboratory_val = [val[0] for val in database_utils.fetchall_query(connection, 'SELECT name FROM laboratory')]
  
-        self.laboratorylist = ttk.Combobox(parent, values = laboratory_val, textvariable = laboratory)
+        self.laboratorylist = ttk.Combobox(popup, values = laboratory_val, textvariable = laboratory)
         self.laboratorylist.set("Pick a laboratory")
         self.laboratorylist.pack()
         
         # add the add button 
         
-        self.add_user_button = tk.Button(parent, text = 'Add user column', command = lambda : add_user_col(parent, firstname, lastname, status, laboratory, connection, grandparent, grandgrandparent))
+        self.add_user_button = tk.Button(popup, text = 'Add user column', command = lambda : add_user_col(popup, firstname, lastname, status, laboratory, connection, grandparent))
         self.add_user_button.pack()
             
 class StatusTree(tk.Frame):
@@ -213,7 +213,7 @@ class StatusAdd():
             self.status_add_button = tk.Button(parent, text = 'Add status column', command = lambda : add_status_col(parent, statusname, connection, grandparent))
             self.status_add_button.pack()
         
-def add_user_col(parent, firstname, lastname, status, laboratory, connection, grandparent, grandgrandparent):
+def add_user_col(popup, firstname, lastname, status, laboratory, connection, grandparent):
     
     # get the status id 
     status_id = database_utils.fetchall_query(connection, 'SELECT id FROM status WHERE name = "{}"'.format(status.get()))[0][0]
@@ -225,9 +225,9 @@ def add_user_col(parent, firstname, lastname, status, laboratory, connection, gr
     table_update.add_row_user_table(firstname.get(), lastname.get(), status_id, laboratory_id, connection)
     
     # update the user table 
-    parent.destroy()
+    popup.destroy()
 
-    GUI_utils.update_table(grandparent, 'user', connection, grandgrandparent)
+    GUI_utils.update_table('user', connection, grandparent)
 
         
 def add_status_col(parent, name, connection, grandparent):
