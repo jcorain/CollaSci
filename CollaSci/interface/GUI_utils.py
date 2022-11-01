@@ -70,7 +70,7 @@ def update_table(table_name, connection, grandparent):
     # to update the table, delete it and then redo it
     for widget in grandparent.winfo_children():
         widget.destroy()
-    if table_name == 'user':
+    if table_name in ['user', 'status']:
         tab_user.create_user_tabs(grandparent, connection)
 
 class DeleteButton():
