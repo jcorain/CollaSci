@@ -9,6 +9,8 @@ import os
 
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_update as tables_update
+import CollaSci.db_function.tables_create as tables_create
+
 
 import CollaSci.interface.tab_user as tab_user
 
@@ -246,6 +248,21 @@ def open_database_widget(data):
         db_name = os.path.basename(data.name)
         connection = database_utils.create_or_connect_db(db_path, db_name)
         dbname = tk.Label(dbframe, text = 'Loaded database : {}'.format(db_name), bd = 20)
+        
+        # create the differnet tables if they do no exist
+        
+        tables_create.create_batch_table(connection)
+        tables_create.create_compound_table(connection)
+        tables_create.create_data_table(connection)
+        tables_create.create_experiment_setup_table(connection)
+        tables_create.create_experiment_type_table(connection)
+        tables_create.create_laboratory_table(connection)
+        tables_create.create_material_type_table(connection)
+        tables_create.create_project_table(connection)
+        tables_create.create_status_table(connection)
+        tables_create.create_university_table(connection)
+        tables_create.create_user_table(connection)
+        
     else:
         connection = None
         db_name = None

@@ -6,6 +6,7 @@ from tkinter import ttk
 
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.db_function.tables_update as table_update
+
 import CollaSci.interface.GUI_utils as GUI_utils
 
 class UserWidget(tk.Frame):
@@ -183,7 +184,7 @@ class StatusTree(tk.Frame):
 
                 
             else:
-                self.label_no_status = tk.Label(self, text = 'There is no data in the user table')
+                self.label_no_status = tk.Label(self, text = 'There is no data in the status table')
                 self.label_no_status.pack()    
 
                 
@@ -262,7 +263,7 @@ class UniversityTree(tk.Frame):
 
                 
             else:
-                self.label_no_laboratory = tk.Label(self, text = 'There is no data in the user table')
+                self.label_no_laboratory = tk.Label(self, text = 'There is no data in the university table')
                 self.label_no_laboratory.pack()    
 
                 
