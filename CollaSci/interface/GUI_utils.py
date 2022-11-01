@@ -6,6 +6,8 @@ import tkinter as tk
 
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.interface.tab_user as tab_user
+import CollaSci.interface.tab_experiment as tab_experiment
+
 
 def delete_popup(connection, table_name, grandparent):
     
@@ -69,16 +71,27 @@ def add_popup(connection, table_name, grandparent):
         tab_user.UniversityAdd(popup, connection, grandparent)
     elif table_name == 'laboratory':
         tab_user.LaboratoryAdd(popup, connection, grandparent)
+    elif table_name == 'experiment_type':
+        tab_experiment.ExperimentTypeAdd(popup, connection, grandparent)
     
         
     
         
-def update_table(table_name, connection, grandparent):
+def update_table(table_name, connection, grandparents):
     # to update the table, delete it and then redo it
-    for widget in grandparent.winfo_children():
-        widget.destroy()
-    if table_name in ['user', 'status', 'university', 'laboratory']:
-        tab_user.create_user_tabs(grandparent, connection)
+    if type(grandparents) is not list:
+        grandparents = [grandparents]
+    for grandparent in grandparents:
+        for widget in grandparent.winfo_children():
+            widget.destroy()
+        if table_name == 'user':
+            tab_user.create_user_tabs(grandparent, connection)
+            tab_experiment.create_experiment_tabs(grandparent, connection)
+        if table_name in ['user', 'status', 'university', 'laboratory']:
+            tab_user.create_user_tabs(grandparent, connection)
+        elif table_name in ['experiment_type', 'experiment_setup']:
+            tab_experiment.create_experiment_tabs(grandparent, connection)
+            
 
 class DeleteButton():
     def __init__(self, parent, connection, table_name, grandparent):                

@@ -17,7 +17,7 @@ class UserWidget(tk.Frame):
         create_user_tabs(self, connection)
     
 class UserTree(tk.Frame):
-    def __init__(self, parent, connection): 
+    def __init__(self, parent, connection, connected_parent_tabs): 
         tk.Frame.__init__(self, parent)
         # get a table with the connection 
         
@@ -62,7 +62,7 @@ class UserTree(tk.Frame):
                 # add the delete frame 
                 
                 GUI_utils.DeleteButton(self, connection, 'user', parent)
-                GUI_utils.AddButton(self, connection, 'user', parent)
+                GUI_utils.AddButton(self, connection, 'user', [parent, connected_parent_tabs])
 
                 
             else:
@@ -73,9 +73,7 @@ class UserTree(tk.Frame):
         else:
             self.label_no_user = tk.Label(self, text = 'There is no SQL connection')
             self.label_no_user.pack()    
-
-       
-       
+  
 class UserAdd():
     def __init__(self, popup, connection, grandparent):
         # add the first name values 
@@ -468,7 +466,7 @@ def create_user_tabs(widget, connection):
     # define the new tabs with user, status, laboratory and university 
     widget.tabcontrol_user = ttk.Notebook(widget)
     
-    widget.tab_user = UserTree(widget.tabcontrol_user, connection)
+    widget.tab_user = UserTree(widget.tabcontrol_user, connection, widget.tabcontrol_experiment)
     widget.tabcontrol_user.add(widget.tab_user, text = 'User')
     
     widget.tab_status = StatusTree(widget.tabcontrol_user, connection)
