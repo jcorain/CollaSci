@@ -145,7 +145,7 @@ class StatusTree(tk.Frame):
         # get a table with the connection 
         
        #  define the first label holding the already defined users 
-        self.label_status = tk.Label(self, text = 'Registered status', relief = 'ridge')
+        self.label_status = tk.Label(self, text = 'Registered statuses', relief = 'ridge')
         self.label_status.pack()  
         
         if connection is not None:
@@ -163,7 +163,7 @@ class StatusTree(tk.Frame):
                 # define headings
                 
                 self.status_tree.heading('id', text = 'id')
-                self.status_tree.heading('name', text = 'First Name')
+                self.status_tree.heading('name', text = 'Name')
                 
                 # get the values related to the user table
                 
@@ -211,6 +211,112 @@ class StatusAdd():
         
         self.add_status_button = tk.Button(popup, text = 'Add status column', command = lambda : add_status_col(popup, name, connection, grandparent))
         self.add_status_button.pack()
+
+class UniversityTree(tk.Frame):
+    def __init__(self, parent, connection): 
+        tk.Frame.__init__(self, parent)
+        # get a table with the connection 
+        
+       #  define the first label holding the already defined users 
+        self.label_status = tk.Label(self, text = 'Registered universities', relief = 'ridge')
+        self.label_status.pack()  
+        
+        if connection is not None:
+            # get the results from the user database
+            res = database_utils.fetchall_query(connection, 'SELECT * FROM university')
+            if res is not None:
+                # define columns 
+            
+                col = ('id','name','country','city','address')
+                
+                # initiate treeview
+                
+                self.university_tree = ttk.Treeview(self, columns = col, show = 'headings')
+                
+                # define headings
+                
+                self.university_tree.heading('id', text = 'id')
+                self.university_tree.heading('name', text = 'Name')
+                self.university_tree.heading('country', text = 'Country')
+                self.university_tree.heading('city', text = 'City')
+                self.university_tree.heading('address', text = 'Address')
+
+                # get the values related to the user table
+                
+                val = None
+                for university in res:
+                    val = (university[0],
+                           university[1],
+                           university[2],
+                           university[3],
+                           university[4])
+                 
+                    self.university_tree.insert('',tk.END, values = val)
+
+                self.university_tree.pack(expand = True, fill = 'both')
+                
+                # add the delete frame 
+                
+                GUI_utils.DeleteButton(self, connection, 'university', parent)
+                GUI_utils.AddButton(self, connection, 'university', parent)
+
+                
+            else:
+                self.label_no_status = tk.Label(self, text = 'There is no data in the user table')
+                self.label_no_status.pack()    
+
+                
+        else:
+            self.label_no_status = tk.Label(self, text = 'There is no SQL connection')
+            self.label_no_status.pack()    
+
+class UniversityAdd():
+    def __init__(self, popup, connection, grandparent):
+        # add the first name values 
+        self.name_lab = tk.Label(popup, text = 'University Name')
+        self.name_lab.pack()
+        
+        # define the firstname string value 
+        
+        name = tk.StringVar(popup)
+        
+        # get the entry for firstname 
+       
+        self.name_entry = tk.Entry(popup, textvariable = name)
+        self.name_entry.pack()
+        
+        # add the country values 
+        self.country_lab = tk.Label(popup, text = 'Country')
+        self.country_lab.pack()
+                
+        country = tk.StringVar(popup)
+       
+        self.country_entry = tk.Entry(popup, textvariable = country)
+        self.country_entry.pack()
+    
+        # add the city values 
+        self.city_lab = tk.Label(popup, text = 'City')
+        self.city_lab.pack()
+                
+        city = tk.StringVar(popup)
+       
+        self.city_entry = tk.Entry(popup, textvariable = city)
+        self.city_entry.pack()
+        
+        # add the address values 
+        self.address_lab = tk.Label(popup, text = 'Address')
+        self.address_lab.pack()
+                
+        address = tk.StringVar(popup)
+       
+        self.address_entry = tk.Entry(popup, textvariable = address)
+        self.address_entry.pack()
+        
+        # add the add button 
+        
+        self.add_university_button = tk.Button(popup, text = 'Add university column', command = lambda : add_university_col(popup, name, country, city, address, connection, grandparent))
+        self.add_university_button.pack()
+
         
 def add_user_col(popup, firstname, lastname, status, laboratory, connection, grandparent):
     
@@ -238,7 +344,18 @@ def add_status_col(popup, name, connection, grandparent):
     # update the user table 
     popup.destroy()
 
-    GUI_utils.update_table('user', connection, grandparent)
+    GUI_utils.update_table('status', connection, grandparent)
+
+def add_university_col(popup, name, country, city, address, connection, grandparent):
+    
+    # get the status id 
+    
+    table_update.add_row_university_table(name.get(), country.get(), city.get(), address.get(), connection)
+    
+    # update the user table 
+    popup.destroy()
+
+    GUI_utils.update_table('university', connection, grandparent)
 
 def create_user_tabs(widget, connection):     
     # define the new tabs with user, status, laboratory and university 
@@ -247,8 +364,10 @@ def create_user_tabs(widget, connection):
     widget.tab_user = UserTree(widget.tabcontrol_user, connection)
     widget.tabcontrol_user.add(widget.tab_user, text = 'User')
     
-    
     widget.tab_status = StatusTree(widget.tabcontrol_user, connection)
     widget.tabcontrol_user.add(widget.tab_status, text = 'Status')
+    
+    widget.tab_university = UniversityTree(widget.tabcontrol_user, connection)
+    widget.tabcontrol_user.add(widget.tab_university, text = 'University')
     
     widget.tabcontrol_user.pack(expand = 1, fill = 'both')

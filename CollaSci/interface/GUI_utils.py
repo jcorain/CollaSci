@@ -65,12 +65,15 @@ def add_popup(connection, table_name, grandparent):
         tab_user.UserAdd(popup, connection, grandparent)
     elif table_name == 'status':
         tab_user.StatusAdd(popup, connection, grandparent)
+    elif table_name == 'university':
+        tab_user.UniversityAdd(popup, connection, grandparent)
+    
         
 def update_table(table_name, connection, grandparent):
     # to update the table, delete it and then redo it
     for widget in grandparent.winfo_children():
         widget.destroy()
-    if table_name in ['user', 'status']:
+    if table_name in ['user', 'status', 'university']:
         tab_user.create_user_tabs(grandparent, connection)
 
 class DeleteButton():
