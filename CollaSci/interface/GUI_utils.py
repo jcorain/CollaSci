@@ -84,9 +84,8 @@ def update_table(table_name, connection, grandparents):
     for grandparent in grandparents:
         for widget in grandparent.winfo_children():
             widget.destroy()
-        if table_name == 'user':
-            tab_user.create_user_tabs(grandparent, connection)
-            tab_experiment.create_experiment_tabs(grandparent, connection)
+        # if table_name == 'user':
+        #     tab_user.create_user_tabs(grandparent, connection)
         if table_name in ['user', 'status', 'university', 'laboratory']:
             tab_user.create_user_tabs(grandparent, connection)
         elif table_name in ['experiment_type', 'experiment_setup']:
