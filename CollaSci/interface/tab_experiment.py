@@ -87,8 +87,8 @@ class ExperimentTypeAdd():
                 
         # add the add button 
         
-        self.add_user_button = tk.Button(popup, text = 'Add user column', command = lambda : add_experiment_type_col(popup, name, connection, grandparent))
-        self.add_user_button.pack()
+        self.add_experiment_type_button = tk.Button(popup, text = 'Add experiment type column', command = lambda : add_experiment_type_col(popup, name, connection, grandparent))
+        self.add_experiment_type_button.pack()
 
 
 class ExperimentSetupTree(tk.Frame):
@@ -254,11 +254,11 @@ class ExperimentSetupAdd():
     
         # add the add button 
         
-        self.add_user_button = tk.Button(popup, text = 'Add experiment setup column', command = lambda : add_experiment_setup_col(popup, name, roomname, startdate, 
+        self.add_experiment_setup_button = tk.Button(popup, text = 'Add experiment setup column', command = lambda : add_experiment_setup_col(popup, name, roomname, startdate, 
                                                                                                                                   minfield, maxfield, mintemperature, maxtemperature,
                                                                                                                                   experiment_type, responsible_name,
                                                                                                                                   connection, grandparent))
-        self.add_user_button.pack()
+        self.add_experiment_setup_button.pack()
 
 
 def add_experiment_type_col(popup, name, connection, grandparent):
@@ -268,7 +268,7 @@ def add_experiment_type_col(popup, name, connection, grandparent):
     # update the user table 
     popup.destroy()
 
-    GUI_utils.update_table('user', connection, grandparent)
+    GUI_utils.update_table('experiment_type', connection, grandparent)
     
 def add_experiment_setup_col(popup, name, room_name, start_date, 
                              min_field, max_field, min_temperature, max_temperature,

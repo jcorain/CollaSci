@@ -7,6 +7,7 @@ import tkinter as tk
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.interface.tab_user as tab_user
 import CollaSci.interface.tab_experiment as tab_experiment
+import CollaSci.interface.tab_material as tab_material
 
 
 def delete_popup(connection, table_name, grandparent):
@@ -75,6 +76,12 @@ def add_popup(connection, table_name, grandparent):
         tab_experiment.ExperimentTypeAdd(popup, connection, grandparent)
     elif table_name == 'experiment_setup':
         tab_experiment.ExperimentSetupAdd(popup, connection, grandparent)
+    elif table_name == 'material_type':
+        tab_material.MaterialTypeAdd(popup, connection, grandparent)
+    elif table_name == 'compound':
+        tab_material.CompoundAdd(popup, connection, grandparent)
+    
+    
     
         
 def update_table(table_name, connection, grandparents):
@@ -90,6 +97,8 @@ def update_table(table_name, connection, grandparents):
             tab_user.create_user_tabs(grandparent, connection)
         elif table_name in ['experiment_type', 'experiment_setup']:
             tab_experiment.create_experiment_tabs(grandparent, connection)
+        elif table_name in ['material_type','compound']:
+            tab_material.create_material_tabs(grandparent, connection)
             
 
 class DeleteButton():

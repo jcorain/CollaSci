@@ -14,6 +14,7 @@ import CollaSci.db_function.tables_create as tables_create
 
 import CollaSci.interface.tab_user as tab_user
 import CollaSci.interface.tab_experiment as tab_experiment
+import CollaSci.interface.tab_material as tab_material
 
 
 # create the dummy db 
@@ -294,8 +295,8 @@ def create_tabs(connection):
         experiment_tab = tab_experiment.ExperimentWidget(tabcontrol, connection)
         tabcontrol.add(experiment_tab, text = 'Experiment')
         
-        tab_material = tk.Frame(tabcontrol)
-        tabcontrol.add(tab_material, text = 'Material')
+        material_tab = tab_material.MaterialWidget(tabcontrol, connection)
+        tabcontrol.add(material_tab, text = 'Material')
         
         tab_project = tk.Frame(tabcontrol)
         tabcontrol.add(tab_project, text = 'Project')
