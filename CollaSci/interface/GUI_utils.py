@@ -73,8 +73,8 @@ def add_popup(connection, table_name, grandparent):
         tab_user.LaboratoryAdd(popup, connection, grandparent)
     elif table_name == 'experiment_type':
         tab_experiment.ExperimentTypeAdd(popup, connection, grandparent)
-    
-        
+    elif table_name == 'experiment_setup':
+        tab_experiment.ExperimentSetupAdd(popup, connection, grandparent)
     
         
 def update_table(table_name, connection, grandparents):
