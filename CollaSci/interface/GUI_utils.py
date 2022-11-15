@@ -8,6 +8,8 @@ import CollaSci.db_function.database_utils as database_utils
 import CollaSci.interface.tab_user as tab_user
 import CollaSci.interface.tab_experiment as tab_experiment
 import CollaSci.interface.tab_material as tab_material
+import CollaSci.interface.tab_project as tab_project
+
 
 
 def delete_popup(connection, table_name, grandparent):
@@ -100,6 +102,8 @@ def update_table(table_name, connection, grandparents):
             tab_experiment.create_experiment_tabs(grandparent, connection)
         elif table_name in ['material_type','compound','batch']:
             tab_material.create_material_tabs(grandparent, connection)
+        elif table_name == 'project':
+            tab_project.create_project_tabs(grandparent, connection)
             
 
 class DeleteButton():
