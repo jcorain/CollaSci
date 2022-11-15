@@ -80,7 +80,8 @@ def add_popup(connection, table_name, grandparent):
         tab_material.MaterialTypeAdd(popup, connection, grandparent)
     elif table_name == 'compound':
         tab_material.CompoundAdd(popup, connection, grandparent)
-    
+    elif table_name == 'batch':
+        tab_material.BatchAdd(popup, connection, grandparent)
     
     
         
@@ -97,7 +98,7 @@ def update_table(table_name, connection, grandparents):
             tab_user.create_user_tabs(grandparent, connection)
         elif table_name in ['experiment_type', 'experiment_setup']:
             tab_experiment.create_experiment_tabs(grandparent, connection)
-        elif table_name in ['material_type','compound']:
+        elif table_name in ['material_type','compound','batch']:
             tab_material.create_material_tabs(grandparent, connection)
             
 

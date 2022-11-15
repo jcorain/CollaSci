@@ -174,7 +174,7 @@ def create_dummy_db():
     mass = 100
     color = 'green'
     Type = "powder"
-    creation_date = '2019-10-12'
+    creation_date = '12/10/2019'
     compound_id = 1
     grower_id = 1
     tables_update.add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
@@ -184,7 +184,7 @@ def create_dummy_db():
     mass = 200
     color = 'green'
     Type = "single cristal"
-    creation_date = '2017-10-12'
+    creation_date = '12/10/2017'
     compound_id = 2
     grower_id = 3
     tables_update.add_row_batch_table(batch_name, mass, color, Type, creation_date, compound_id, grower_id, connection)
@@ -205,7 +205,7 @@ def create_dummy_db():
     experiment_no = 1
     field = 2 
     temperature = 300 
-    date = '2018-01-21'
+    date = '21/01/2018'
     path_import = os.path.join(os.path.dirname(os.path.dirname(__file__)),'tests','data','PyzVOFZFCFC1T.dc.dat')
     comment = None
     experiment_setup_id = 1
@@ -222,7 +222,7 @@ def create_dummy_db():
     experiment_no = 5
     field = None 
     temperature = None 
-    date = '2018-12-21'
+    date = '21/12/2018'
     path_import = os.path.join(os.path.dirname(os.path.dirname(__file__)),'tests','data','PyzVOFZFCFC0p1T.dc.dat')
     comment = None
     experiment_setup_id = 2
