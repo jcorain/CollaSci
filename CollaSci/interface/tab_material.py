@@ -21,11 +21,9 @@ class MaterialWidget(tk.Frame):
 class MaterialTypeTree(tk.Frame):
     def __init__(self, parent, connection): 
         tk.Frame.__init__(self, parent)
-        # get a table with the connection 
         
-       #  define the first label holding the already defined users 
-        self.label_material_type = tk.Label(self, text = 'Registered material types', relief = 'ridge')
-        self.label_material_type.pack()  
+        #  define the first label holding the already defined users 
+        tk.Label(self, text = 'Registered material types', relief = 'ridge').pack()  
         
         if connection is not None:
             # get the results from the user database
@@ -58,37 +56,29 @@ class MaterialTypeTree(tk.Frame):
                 
                 GUI_utils.DeleteButton(self, connection, 'material_type', parent)
                 GUI_utils.AddButton(self, connection, 'material_type', parent)
-
-                
+    
             else:
-                self.label_no_material_type = tk.Label(self, text = 'There is no data in the material_type table')
-                self.label_no_material_type.pack()    
-
-                
+                tk.Label(self, text = 'There is no data in the material_type table').pack()
+     
         else:
-            self.label_no_material_type = tk.Label(self, text = 'There is no SQL connection')
-            self.label_no_material_type.pack()
+            tk.Label(self, text = 'There is no SQL connection').pack()
             
 
 class MaterialTypeAdd():
     def __init__(self, popup, connection, grandparent):
-        # add the first name values 
-        self.name_lab = tk.Label(popup, text = 'Name')
-        self.name_lab.pack(expand = 1, fill = 'both')
-        
-        # define the firstname string value 
-        
-        name = tk.StringVar(popup)
-        
-        # get the entry for firstname 
        
-        self.name_entry = tk.Entry(popup, textvariable = name)
-        self.name_entry.pack(expand = 1, fill = 'both')
-                
+        
+        name_entry = GUI_utils.AddValueEntry(popup, connection, grandparent, 'Name')
+        name = name_entry.value
+        
         # add the add button 
         
-        self.add_material_type_button = tk.Button(popup, text = 'Add material type column', command = lambda : add_material_type_col(popup, name, connection, grandparent))
-        self.add_material_type_button.pack()
+        tk.Button(popup, 
+                  text = 'Add material type column', 
+                  command = lambda : add_material_type_col(popup, 
+                                                           name, 
+                                                           connection, 
+                                                           grandparent)).pack()
 
 
 class CompoundTree(tk.Frame):
@@ -180,49 +170,6 @@ class CompoundAdd():
         self.add_compound_button = tk.Button(popup, 
                                              text = 'Add compound column',
                                              command = lambda : add_compound_col(popup, name, formula, material_type, connection, grandparent))
-        self.add_compound_button.pack()
-
-class BatchTree(tk.Frame):
-    def __init__(self, popup, connection, grandparent):
-        # add the first name values 
-        self.name_lab = tk.Label(popup, text = 'Name')
-        self.name_lab.pack(expand = 1, fill = 'both')
-        
-        # define the firstname string value 
-        
-        name = tk.StringVar(popup)
-        
-        # get the entry for firstname 
-       
-        self.name_entry = tk.Entry(popup, textvariable = name)
-        self.name_entry.pack(expand = 1, fill = 'both')
-        
-        self.formula_lab = tk.Label(popup, text = 'Formula')
-        self.formula_lab.pack(expand = 1, fill = 'both')
-        formula = tk.StringVar(popup)       
-        self.formula_entry = tk.Entry(popup, textvariable = formula)
-        self.formula_entry.pack(expand = 1, fill = 'both')
-        
-        # add the material type values 
-               
-        self.experiement_type_lab = tk.Label(popup, text = 'Material Type (if the material_type you want does not exist in the list please update the material_type table.')
-        self.experiement_type_lab.pack(expand = 1, fill = 'both')
-       
-        #define the status string value 
-      
-        material_type = tk.StringVar(popup)
-        # get the list of existing status 
-        material_type_val = [val[0] for val in database_utils.fetchall_query(connection, 'SELECT name FROM material_type')]
-
-        self.material_typelist = ttk.Combobox(popup, values = material_type_val, textvariable = material_type)
-        self.material_typelist.set("Pick a Material Type")
-        self.material_typelist.pack(expand = 1, fill = 'both')
-                
-        # add the add button 
-    
-        self.add_compound_button = tk.Button(popup, text = 'Add compound column', command = lambda : add_compound_col(popup, name,
-                                                                                                                      formula, material_type,
-                                                                                                                      connection, grandparent))
         self.add_compound_button.pack()
 
 class BatchTree(tk.Frame):

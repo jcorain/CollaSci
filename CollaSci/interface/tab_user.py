@@ -22,8 +22,7 @@ class UserTree(tk.Frame):
         # get a table with the connection 
         
        #  define the first label holding the already defined users 
-        self.label_user = tk.Label(self, text = 'Registered users', relief = 'ridge')
-        self.label_user.pack()  
+        tk.Label(self, text = 'Registered users', relief = 'ridge').pack()  
         
         if connection is not None:
             # get the results from the user database
@@ -63,80 +62,43 @@ class UserTree(tk.Frame):
                 
                 GUI_utils.DeleteButton(self, connection, 'user', parent)
                 GUI_utils.AddButton(self, connection, 'user', parent)
-
-                
+               
             else:
-                self.label_no_user = tk.Label(self, text = 'There is no data in the user table')
-                self.label_no_user.pack()    
-
-                
+                tk.Label(self, text = 'There is no data in the user table').pack()    
+             
         else:
-            self.label_no_user = tk.Label(self, text = 'There is no SQL connection')
-            self.label_no_user.pack()    
+            tk.Label(self, text = 'There is no SQL connection').pack()    
   
 class UserAdd():
     def __init__(self, popup, connection, grandparent):
         # add the first name values 
-        self.firstname_lab = tk.Label(popup, text = 'First Name')
-        self.firstname_lab.pack()
+        firstname_entry = GUI_utils.AddValueEntry(popup, connection, grandparent, 'First Name')
+        firstname = firstname_entry.value
         
-        # define the firstname string value 
-        
-        firstname = tk.StringVar(popup)
-        
-        # get the entry for firstname 
-       
-        self.firstname_entry = tk.Entry(popup, textvariable = firstname)
-        self.firstname_entry.pack()
-        
-        # add the first name values 
-        self.lastname_lab = tk.Label(popup, text = 'Last Name')
-        self.lastname_lab.pack()
-        
-        #define the firstname string value 
-       
-        lastname = tk.StringVar(popup)
-        
-        # get the entry for lastname 
-       
-        self.lastname_entry = tk.Entry(popup, textvariable = lastname)
-        self.lastname_entry.pack()
+        # add the last name values 
+        lastname_entry = GUI_utils.AddValueEntry(popup, connection, grandparent, 'Last Name')
+        lastname = lastname_entry.value
         
         # add the status values 
         
-        self.status_lab = tk.Label(popup, text = 'Status (if the status you want does not exist in the list please update the status table.')
-        self.status_lab.pack()
-        
-        #define the status string value 
-       
-        status = tk.StringVar(popup)
-        
-        # get the list of existing status 
-        status_val = [val[0] for val in database_utils.fetchall_query(connection, 'SELECT name FROM status')]
- 
-        self.statuslist = ttk.Combobox(popup, values = status_val, textvariable = status)
-        self.statuslist.set("Pick a status")
-        self.statuslist.pack()
+        status_entry = GUI_utils.AddValueList(popup, connection, grandparent, 'Status', 'status')
+        status = status_entry.value
         
         # add the laboratory values 
         
-        self.laboratory_lab = tk.Label(popup, text = 'Laboratory (if the laboratory you want does not exist in the list please update the laboratory table.')
-        self.laboratory_lab.pack()
-        
-        #define the laboratory string value 
-       
-        laboratory = tk.StringVar(popup)
-        # get the list of existing status 
-        laboratory_val = [val[0] for val in database_utils.fetchall_query(connection, 'SELECT name FROM laboratory')]
- 
-        self.laboratorylist = ttk.Combobox(popup, values = laboratory_val, textvariable = laboratory)
-        self.laboratorylist.set("Pick a laboratory")
-        self.laboratorylist.pack()
+        laboratory_entry = GUI_utils.AddValueList(popup, connection, grandparent, 'Laboratory', 'laboratory')
+        laboratory = laboratory_entry.value
         
         # add the add button 
         
-        self.add_user_button = tk.Button(popup, text = 'Add user column', command = lambda : add_user_col(popup, firstname, lastname, status, laboratory, connection, grandparent))
-        self.add_user_button.pack()
+        tk.Button(popup, text = 'Add user column', 
+                  command = lambda : add_user_col(popup, 
+                                                  firstname, 
+                                                  lastname, 
+                                                  status, 
+                                                  laboratory, 
+                                                  connection, 
+                                                  grandparent)).pack()
             
 class StatusTree(tk.Frame):
     def __init__(self, parent, connection): 

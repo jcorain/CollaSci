@@ -3,6 +3,8 @@
 module for GUI utils
 """
 import tkinter as tk
+from tkinter import ttk
+
 
 import CollaSci.db_function.database_utils as database_utils
 import CollaSci.interface.tab_user as tab_user
@@ -10,7 +12,33 @@ import CollaSci.interface.tab_experiment as tab_experiment
 import CollaSci.interface.tab_material as tab_material
 import CollaSci.interface.tab_project as tab_project
 
+class AddValueEntry():
+    def __init__(self, popup, connection, grandparent, label_text):
+        # add the label 
+        tk.Label(popup, text = label_text).pack(expand = 1, fill = 'both')
+        # defiwne the value
+        value = tk.StringVar(popup)
+        # get the entry
+        tk.Entry(popup, textvariable = value).pack(expand = 1, fill = 'both')
+        # get the value
+        self.value = value
 
+class AddValueList():
+    def __init__(self, popup, connection, grandparent, label_text, table_name):
+        # add the label 
+    
+        tk.Label(popup, text = '{} (if the {} you want does not exist in the list please update the {} table).'.format(label_text, str.lower(label_text), table_name)).pack(expand = 1, fill = 'both')
+    
+        #define the value 
+   
+        value = tk.StringVar(popup)
+    
+        # get the list of existing status 
+        val = [val[0] for val in database_utils.fetchall_query(connection, 'SELECT name FROM {}'.format(table_name))]
+
+        ttk.Combobox(popup, values = val, textvariable = value).pack(expand = 1, fill = 'both')
+        # get the value 
+        self.value = value
 
 def delete_popup(connection, table_name, grandparent):
     
@@ -94,8 +122,6 @@ def update_table(table_name, connection, grandparents):
     for grandparent in grandparents:
         for widget in grandparent.winfo_children():
             widget.destroy()
-        # if table_name == 'user':
-        #     tab_user.create_user_tabs(grandparent, connection)
         if table_name in ['user', 'status', 'university', 'laboratory']:
             tab_user.create_user_tabs(grandparent, connection)
         elif table_name in ['experiment_type', 'experiment_setup']:
